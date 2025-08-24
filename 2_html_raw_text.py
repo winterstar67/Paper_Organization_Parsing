@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import time
 import pickle
+import xml.dom.minidom
 
 def extract_ltx_authors(html_url):
     """
@@ -38,8 +39,26 @@ def extract_ltx_authors(html_url):
         if ltx_authors_div:
             # 텍스트만 추출
             text_only = ltx_authors_div.get_text()
-            # HTML 태그 포함하여 추출
-            html_with_tags = str(ltx_authors_div)
+            # HTML 태그 포함하여 hierarchical indentation으로 추출
+            try:
+                # BeautifulSoup의 prettify()는 기본 2칸 들여쓰기 사용
+                pretty_html = ltx_authors_div.prettify()
+                # 2칸을 4칸으로 변경
+                lines = pretty_html.split('\n')
+                formatted_lines = []
+                for line in lines:
+                    # 앞의 공백 개수 세기
+                    leading_spaces = len(line) - len(line.lstrip())
+                    if leading_spaces > 0:
+                        # 2칸 단위를 4칸 단위로 변경
+                        new_indent = ' ' * (leading_spaces * 2)
+                        formatted_lines.append(new_indent + line.lstrip())
+                    else:
+                        formatted_lines.append(line)
+                html_with_tags = '\n'.join(formatted_lines)
+            except:
+                # prettify 실패시 원본 HTML 사용
+                html_with_tags = str(ltx_authors_div)
             return (text_only, html_with_tags)
         else:
             return ("NO_ltx_authors", "NO_ltx_authors")
