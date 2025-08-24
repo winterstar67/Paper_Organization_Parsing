@@ -1,0 +1,113 @@
+﻿ID,Collected_date,abs_url,html_url,Title,Authors,Submitted,Originally_announced,Subjects,authors_organizations,authors_emails,html_raw_text,hallucination_suspected,extraction_status
+5,2025-08-23 15:31:27,https://arxiv.org/abs/2508.10915,https://arxiv.org/html/2508.10915,Insect-Wing Structured Microfluidic System for Reservoir Computing,Jacob Clouse; Thomas Ramsey; Samitha Somathilaka; Nicholas Kleinsasser; Sangjin Ryu; Sasitharan Balasubramaniam,"1 August, 2025",August 2025,cs.NE; cs.ET; cs.LG,"[""Jacob Clouse"", ""School of Computing, University of Nebraska-Lincoln, Lincoln, Nebraska, USA"", ""Thomas Ramsey"", ""Department of Mechanical and Materials Engineering, University of Nebraska-Lincoln, Lincoln, Nebraska, USA"", ""Samitha Somathilaka"", ""Nicholas Kleinsasser"", ""Sangjin Ryu"", ""Sasitharan Balasubramaniam""]",No_info,"
+
+Jacob Clouse
+
+School of Computing, University of Nebraska-Lincoln, Lincoln, Nebraska, USA
+
+
+Thomas Ramsey
+
+Department of Mechanical and Materials Engineering, University of Nebraska-Lincoln, Lincoln, Nebraska, USA
+
+
+Samitha Somathilaka
+
+School of Computing, University of Nebraska-Lincoln, Lincoln, Nebraska, USA
+
+
+Nicholas Kleinsasser
+
+School of Computing, University of Nebraska-Lincoln, Lincoln, Nebraska, USA
+
+
+Sangjin Ryu
+
+Department of Mechanical and Materials Engineering, University of Nebraska-Lincoln, Lincoln, Nebraska, USA
+
+
+Sasitharan Balasubramaniam
+
+School of Computing, University of Nebraska-Lincoln, Lincoln, Nebraska, USA
+
+",No,parsed_successfully
+6,2025-08-23 15:31:29,https://arxiv.org/abs/2508.09997,https://arxiv.org/html/2508.09997,Thematic and Task-Based Categorization of K-12 GenAI Usages with Hierarchical Topic Modeling,Johannes Schneider; Béatrice S. Hasler; Michaela Varrone; Fabian Hoya; Thomas Schroffenegger; Dana-Kristin Mah; Karl Peböck,"1 August, 2025",August 2025,cs.CL; cs.CY,"[""Johannes Schneider"", ""Béatrice S. Hasler"", ""Michaela Varrone"", ""Fabian Hoya"", ""Thomas Schroffenegger"", ""Dana-Kristin Mah"", ""Karl Peböck""]",No_info,"
+
+
+Johannes Schneider
+11
+  
+Béatrice S. Hasler
+11
+  
+Michaela Varrone
+33
+  
+Fabian Hoya
+22
+  
+Thomas Schroffenegger
+22
+  
+Dana-Kristin Mah
+44
+  
+Karl Peböck
+22
+",No,parsed_successfully
+8,2025-08-23 15:31:26,https://arxiv.org/abs/2508.09147,https://arxiv.org/html/2508.09147,Agentic TinyML for Intent-aware Handover in 6G Wireless Networks,Alaa Saleh; Roberto Morabito; Sasu Tarkoma; Anders Lindgren; Susanna Pirttikangas; Lauri Lovén,"2 August, 2025",August 2025,cs.NI; cs.AI; cs.DC; cs.LG; cs.MA,"[""Alaa Saleh"", ""Center for Ubiquitous Computing"", ""University of Oulu"", ""Oulu 90014, Finland"", ""Roberto Morabito"", ""Department of Communication Systems"", ""Biot 06410, France"", ""Sasu Tarkoma"", ""Department of Computer Science"", ""University of Helsinki"", ""Helsinki 00100, Finland"", ""Anders Lindgren"", ""RISE Research Institutes of Sweden"", ""Stockholm 166 40, Sweden"", ""Department of Computer Science,"", ""Electrical and Space Engineering"", ""Luleå University of Technology"", ""Luleå 971 87, Sweden"", ""Susanna Pirttikangas"", ""Lauri Lovén""]","[""alaa.saleh@oulu.fi"", ""roberto.morabito@eurecom.fr"", ""sasu.tarkoma@helsinki.fi"", ""anders.lindgren@ri.se"", ""susanna.pirttikangas@oulu.fi"", ""lauri.loven@oulu.fi""]","
+
+
+Alaa Saleh 
+Center for Ubiquitous Computing
+University of Oulu
+Oulu 90014, Finland 
+alaa.saleh@oulu.fi
+\AndRoberto Morabito 
+Department of Communication Systems
+EURECOM
+Biot 06410, France 
+roberto.morabito@eurecom.fr
+\AndSasu Tarkoma 
+Department of Computer Science
+University of Helsinki
+Helsinki 00100, Finland 
+sasu.tarkoma@helsinki.fi
+\AndAnders Lindgren 
+RISE Research Institutes of Sweden
+Stockholm 166 40, Sweden 
+Department of Computer Science, 
+Electrical and Space Engineering
+Luleå University of Technology 
+Luleå 971 87, Sweden
+anders.lindgren@ri.se
+\AndSusanna Pirttikangas 
+Center for Ubiquitous Computing
+University of Oulu
+Oulu 90014, Finland 
+susanna.pirttikangas@oulu.fi
+\AndLauri Lovén 
+Center for Ubiquitous Computing
+University of Oulu
+Oulu 90014, Finland 
+lauri.loven@oulu.fi
+
+
+",Corrected,parsed_successfully
+7,2025-08-23 15:31:26,https://arxiv.org/abs/2508.09148,https://arxiv.org/html/2508.09148,Motif 2.6B Technical Report,Junghwan Lim; Sungmin Lee; Dongseok Kim; Eunhwan Park; Hyunbyung Park; Junhyeok Lee; Wai Ting Cheung; Dahye Choi; Jaeheui Her; Jaeyeon Huh; Hanbin Jung; Changjin Kang; Beomgyu Kim; Jihwan Kim; Minjae Kim; Taehwan Kim; Youngrok Kim; Haesol Lee; Jeesoo Lee; Kungyu Lee; Dongpin Oh; Yeongjae Park; Bokki Ryu; Daewon Suh; Dongjoo Weon,"2 August, 2025",August 2025,cs.LG; cs.AI,"[""Motif Technologies""]",No_info,"
+
+Motif Technologies
+
+",No,parsed_successfully
+9,2025-08-23 15:31:25,https://arxiv.org/abs/2508.08283,https://arxiv.org/html/2508.08283,MinionsLLM: a Task-adaptive Framework For The Training and Control of Multi-Agent Systems Through Natural Language,Andres Garcia Rincon; Eliseo Ferrante,"1 August, 2025",August 2025,cs.CL; cs.AI; cs.LG; cs.MA; cs.RO,"[""Andres Garcia Rincon"", ""Eliseo Ferrante""]",No_info,"
+
+Andres Garcia Rincon
+11
+0009-0005-6121-6950
+
+  
+Eliseo Ferrante
+1122
+0000-0002-2213-8356
+
+",No,parsed_successfully

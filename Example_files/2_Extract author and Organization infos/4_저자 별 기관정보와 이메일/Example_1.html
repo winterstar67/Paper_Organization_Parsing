@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://arxiv.org/html/2508.01547v1 -->
+<html lang="en" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice</title>
+<!--Generated on Sun Aug  3 02:12:28 2025 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+<link href="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/ar5iv.0.8.2.m.css" rel="stylesheet" type="text/css">
+<link href="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/ar5iv-fonts.0.css" rel="stylesheet" type="text/css">
+<link href="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/latexml_style.css" rel="stylesheet" type="text/css">
+<script src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/bootstrap.bu.다운로드"></script>
+<script src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/html2canvas..다운로드"></script>
+<script src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/addons_new.j.다운로드"></script>
+<script src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/feedbackOver.다운로드"></script>
+<!--<base href="/html/2508.01547v1/">--><base href="."><link rel="stylesheet" href="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/utz6mli.css"><link rel="icon" type="image/png" href="https://static.arxiv.org/static/browse/0.3.4/images/icons/favicon-16x16.png" sizes="16x16"><link rel="icon" type="image/png" href="https://static.arxiv.org/static/browse/0.3.4/images/icons/favicon-32x32.png" sizes="32x32"></head>
+<body><header class="mob_header">
+    <div class="html-header-logo">
+      <a href="https://arxiv.org/">
+        <img alt="logo" class="logomark" role="presentation" width="100" src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/arxiv-logomar.svg">
+        <span class="sr-only">Back to arXiv</span>
+      </a>
+    </div>
+
+    <!--TOC, dark mode, links-->
+    <div class="html-header-nav">
+      <!--back to abstract-->
+      
+        <a class="nav-link ar5iv-footer-button hover-effect" aria-label="Back to abstract page" href="https://arxiv.org/abs/2508.01547v1">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 512 512" fill="#ffffff" aria-hidden="true">
+            <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"></path>
+        </svg>
+        </a>
+      <!--dark mode-->
+      <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle dark/light mode" aria-label="System preference">
+        <label id="automatic-tog" class="toggle-icon" title="Switch to light mode" for="__palette_3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"></path></svg>
+        </label>
+        <label id="light-tog" class="toggle-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
+        <label id="dark-tog" class="toggle-icon" title="Switch to system preference" for="__palette_2" hidden="">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
+      </a>
+      <!--nav-->
+      <button class="navbar-toggler ar5iv-footer-button" type="button" data-bs-theme="dark" data-bs-toggle="collapse" aria-expanded="false" data-bs-target=".ltx_page_main &gt;.ltx_TOC.mobile" aria-controls="navbarSupportedContent" aria-label="Toggle navigation" style="border:none; margin-right: 0em;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 448 512" aria-hidden="true" role="img" fill="#ffffff"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"></path></svg>
+      </button>
+    </div>
+    </header><header class="desktop_header">
+    <div class="html-header-logo">
+      <a href="https://arxiv.org/">
+          <img alt="logo" class="logo" role="presentation" width="100" src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/arxiv-logo-on.svg">
+          <span class="sr-only">Back to arXiv</span>
+      </a>
+    </div>
+    <div class="html-header-message" role="banner">
+        <p>This is <strong>experimental HTML</strong> to improve accessibility. We invite you to report rendering errors. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span> Learn more <a href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">about this project</a> and <a href="https://info.arxiv.org/help/submit_latex_best_practices.html" target="_blank">help improve conversions</a>.
+        </p>
+    </div>
+    <nav class="html-header-nav">
+      <a class="ar5iv-footer-button hover-effect" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
+      <a class="ar5iv-footer-button hover-effect" target="_blank" href="https://arxiv.org/html/2508.01547v1/#myForm" onclick="event.preventDefault(); var modal = document.getElementById(&#39;myForm&#39;); modal.style.display = &#39;block&#39;; bugReportState.setInitiateWay(&#39;Header&#39;);">Report Issue</a>
+      <a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/2508.01547v1">Back to Abstract</a>
+      <a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/pdf/2508.01547v1" target="_blank">Download PDF</a>
+      <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle dark/light mode">
+        <label id="automatic-tog" class="toggle-icon" title="Switch to light mode" for="__palette_3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"></path></svg>
+        </label>
+        <label id="light-tog" class="toggle-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
+        <label id="dark-tog" class="toggle-icon" title="Switch to system preference" for="__palette_2" hidden="">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
+      </a>
+    </nav></header>
+
+<div class="ltx_page_main" id="main">
+<nav class="ltx_TOC active" aria-labelledby="toc_header"><h2 id="toc_header" class="sr-only">Table of Contents</h2>
+
+      <div id="listIcon" type="button" class="hide">
+          <svg width="17px" height="17px" viewBox="0 0 512 512" style="pointer-events: none;">
+          <path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"></path>
+          </svg>
+      </div>
+      <div id="arrowIcon" type="button">
+          <svg width="17px" height="17px" viewBox="0 0 448 512" style="pointer-events: none;">
+          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path>
+          </svg>
+      </div><ol class="ltx_toclist"><li class="ltx_tocentry ltx_tocentry_section">
+    <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#abstract" title="Abstract">
+      <span class="ltx_text ltx_ref_title">
+        <span class="ltx_tag ltx_tag_ref"></span>
+        Abstract
+      </span>
+    </a></li>
+<li class="ltx_tocentry ltx_tocentry_section"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S1" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">1 </span>Introduction</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_section">
+<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">2 </span>Methods</span></a>
+<ol class="ltx_toclist ltx_toclist_section">
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.SS1" title="In 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">2.1 </span>Data collection</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.SS2" title="In 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">2.2 </span>Feature selection and extraction</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.SS3" title="In 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">2.3 </span>Statistical and regression analysis</span></a></li>
+</ol>
+</li>
+<li class="ltx_tocentry ltx_tocentry_section">
+<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">3 </span>Findings</span></a>
+<ol class="ltx_toclist ltx_toclist_section">
+<li class="ltx_tocentry ltx_tocentry_paragraph"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.SS0.SSS0.Px1" title="In 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span>&nbsp;more closely matches <span class="ltx_text ltx_font_smallcaps">Human</span>&nbsp;rhetorical styles and knowledge coverage.</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_paragraph"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.SS0.SSS0.Px2" title="In 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_text ltx_font_smallcaps">ChatGPT</span> responses are generally more preferred over human responses.</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_paragraph"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.SS0.SSS0.Px3" title="In 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title">Multiple characteristics of responses collectively shape the overall preferences.</span></a></li>
+</ol>
+</li>
+<li class="ltx_tocentry ltx_tocentry_section"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S4" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">4 </span>Case Study</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_section"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S5" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">5 </span>Discussion &amp; Conclusion</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_section"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S6" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">6 </span>Acknowledgement</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_appendix"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#A1" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">A </span>Prompts for keyword expansion on visualization taxonomy</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_appendix"><a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#A2" title="In Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">B </span>Prompts for advice identification and visualization concept detection from text</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_section">
+    <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib" title="References">
+      <span class="ltx_text ltx_ref_title">
+        <span class="ltx_tag ltx_tag_ref"></span>
+        References
+      </span>
+    </a></li></ol></nav>
+
+<div class="ltx_page_content"><div class="package-alerts ltx_document" role="status" aria-label="Conversion errors have been found">
+      <button aria-label="Dismiss alert" onclick="closePopup()">
+          <span aria-hidden="true"><svg role="presentation" width="20" height="20" viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+          <path d="M0.549989 4.44999L4.44999 0.549988L43.45 39.55L39.55 43.45L0.549989 4.44999Z"></path>
+          <path d="M39.55 0.549988L43.45 4.44999L4.44999 43.45L0.549988 39.55L39.55 0.549988Z"></path>
+          </svg></span>
+      </button>
+      <p>HTML conversions <a href="https://info.dev.arxiv.org/about/accessibility_html_error_messages.html" target="_blank">sometimes display errors</a> due to content that did not convert correctly from the source. This paper uses the following packages that are not yet supported by the HTML conversion tool. Feedback on these issues are not necessary; they are known and are being worked on.</p>
+          <ul arial-label="Unsupported packages used in this paper">
+              <li>failed: vgtc.cls</li><li>failed: tabu.sty</li><li>failed: mwe.sty</li><li>failed: spverbatim.sty</li>
+          </ul>
+      <p>Authors: achieve the best HTML results from your LaTeX submissions by following these <a href="https://info.arxiv.org/help/submit_latex_best_practices.html" target="_blank">best practices</a>.</p>
+    </div><div id="target-section" class="section"><a id="license-tr" href="https://info.arxiv.org/help/license/index.html#licenses-available">License: arXiv.org perpetual non-exclusive license</a><div id="watermark-tr">arXiv:2508.01547v1 [cs.HC] 03 Aug 2025</div></div>
+<article class="ltx_document ltx_authors_1line">
+<div class="ltx_para" id="p1">
+<span class="ltx_ERROR undefined">\onlineid</span>
+<p class="ltx_p">0
+<span class="ltx_ERROR undefined">\vgtccategory</span>Research
+<span class="ltx_ERROR undefined">\vgtcinsertpkg</span>
+</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<h1 class="ltx_title ltx_title_document">Understanding Why <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> Outperforms <span class="ltx_text ltx_font_smallcaps">Human</span>s in Visualization Design Advice</h1><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_authors">
+<span class="ltx_creator ltx_role_author">
+<span class="ltx_personname">Yongsu Ahn
+<br class="ltx_break"><span class="ltx_text" style="font-size:70%;">Boston College</span>
+</span><span class="ltx_author_notes">e-mail: anyon@bc.edu</span></span>
+<span class="ltx_author_before">  </span><span class="ltx_creator ltx_role_author">
+<span class="ltx_personname">Nam Wook Kim 
+<br class="ltx_break"><span class="ltx_text" style="font-size:70%;">Boston College
+</span>
+</span><span class="ltx_author_notes">e-mail:nam.wook.kim@bc.edu</span></span>
+</div><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_abstract" id="abstract">
+<h6 class="ltx_title ltx_title_abstract">Abstract</h6><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<p class="ltx_p">This paper investigates why recent generative AI models outperform humans in data visualization knowledge tasks. Through systematic comparative analysis of responses to visualization questions, we find that differences exist between two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> models and human outputs over rhetorical structure, knowledge breadth, and perceptual quality. Our findings reveal that <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>-4, as a more advanced model, displays a hybrid of characteristics from both humans and <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>-3.5. The two models were generally favored over human responses, while their strengths in coverage and breadth, and emphasis on technical and task-oriented visualization feedback collectively shaped higher overall quality. Based on our findings, we draw implications for advancing user experiences based on the potential of LLMs and human perception over their capabilities, with relevance to broader applications of AI.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_classification">
+<h6 class="ltx_title ltx_title_classification">keywords: </h6><button class="sr-only button" style="display: none;">Report issue for preceding element</button>Generative AI, LLM, Visualization, Question and answering, ChatGPT.
+</div>
+<section class="ltx_section" id="S1">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section">1 </span>Introduction</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S1.p1">
+<p class="ltx_p">Many data visualization practitioners are self-taught, acquiring design knowledge on the go and building their skills informally through online examples and other digital resources <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib1" title="">1</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib10" title="">10</a>]</cite>. When faced with design decisions, they often rely on intuition shaped by prior experiences and observations <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib8" title="">8</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib20" title="">20</a>]</cite>. Others seek feedback from peers or online communities, such as the Data Visualization Society, to gain fresh perspectives, validate their design choices, or challenge underlying assumptions <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib8" title="">8</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib16" title="">16</a>]</cite>.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S1.p2">
+<p class="ltx_p">Recent generative AI models trained on internet-scale datasets have shown strong capabilities in data visualization knowledge tasks <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib6" title="">6</a>]</cite>—for example, identifying misleading designs <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib3" title="">3</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib15" title="">15</a>]</cite> and helping novices interpret charts <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib7" title="">7</a>]</cite>. Chatbots powered by these models can serve as design and learning assistants, offering guidance to data visualization practitioners more efficiently than the traditional design process. A recent study <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib12" title="">12</a>]</cite> demonstrated this potential by feeding real-world design questions and feedback requests from the VisGuides platform into ChatGPT. The results showed that the AI’s responses were often comparable to, or even better than, those generated by humans.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S1.p3">
+<p class="ltx_p">While the previous study offers valuable initial insights into ChatGPT’s potential as a design assistant, it has several limitations. The evaluation was carried out by a small group of researchers, which may not reflect the perspectives of actual practitioners. Moreover, it did not examine the underlying reasons behind ChatGPT’s superior performance compared to human counterparts, leaving open questions about not just how well ChatGPT performs, but why and under what conditions it excels or falls short.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S1.p4">
+<p class="ltx_p">This paper takes a deeper look into the comparative analysis of ChatGPT and human responses to data visualization questions, with a focus on their specific characteristics that shape the overall quality of their answers. To guide this investigation, our study explores the following research questions:</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S1.p5">
+<ul class="ltx_itemize" id="S1.I1">
+<li class="ltx_item" id="S1.I1.i1" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="S1.I1.i1.p1">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">RQ1</span> (<span class="ltx_text ltx_font_bold">Response Characteristics</span>): What semantic and syntactic differences exist between <span class="ltx_text ltx_font_smallcaps">Human</span> vs. <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> responses to data visualization questions?</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</li>
+<li class="ltx_item" id="S1.I1.i2" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="S1.I1.i2.p1">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">RQ2</span> (<span class="ltx_text ltx_font_bold">Response Quality</span>): On what quality dimensions, <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> responses are perceived better than <span class="ltx_text ltx_font_smallcaps">Human</span> counterparts?</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</li>
+<li class="ltx_item" id="S1.I1.i3" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="S1.I1.i3.p1">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">RQ3</span> (<span class="ltx_text ltx_font_bold">Response Quality <math alttext="\sim" class="ltx_Math" display="inline" id="S1.I1.i3.p1.m1"><semantics><mo>∼</mo><annotation encoding="application/x-tex">\sim</annotation><annotation encoding="application/x-llamapun">∼</annotation></semantics></math> Response Characteristics</span>): What aspects of response content and intrinsic quality are associated with perceived overall quality of responses?</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section class="ltx_section" id="S2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section">2 </span>Methods</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<figure class="ltx_figure" id="S2.F1"><img alt="Refer to caption" class="ltx_graphics ltx_img_landscape" height="369" id="S2.F1.g1" src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/x1.png" width="830">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 1: </span>
+The overview of the analysis pipeline. Our method facilitates the comparative analysis of three aspects of capabilities between human and generative AI.</figcaption>
+</figure><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<figure class="ltx_figure" id="S2.F2"><img alt="Refer to caption" class="ltx_graphics ltx_img_landscape" height="293" id="S2.F2.g1" src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/x2.png" width="830">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 2: </span>
+Our analysis reveals distinct properties of responses from <span class="ltx_text ltx_font_smallcaps">Human</span> and <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s over i) rhetorical styles, ii) knowledge coverage, and iii) perceived quality.</figcaption>
+</figure><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S2.p1">
+<p class="ltx_p">Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F1" title="Figure 1 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">1</span></a> illustrates our methodological approach to address these questions through data collection, feature extraction for comparative analysis (RQ1), survey-based quality evaluation (RQ2), and regression modeling to identify quality-associated factors (RQ3).</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<section class="ltx_subsection" id="S2.SS1">
+<h3 class="ltx_title ltx_title_subsection">
+<span class="ltx_tag ltx_tag_subsection">2.1 </span>Data collection</h3><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S2.SS1.p1">
+<p class="ltx_p">For our analysis of visualization questions and responses, we used VisGuides <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib9" title="">9</a>]</cite>, a visualization-focused forum, where practitioners seek advice and feedback and respond to questions. We selected 119 of 226 questions based on inclusion criteria such as content sufficiency via a validation process from two coders’ unanimous agreement. To obtain responses from <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>, we fed each query to <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> in May 2023 and with images to <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> with Vision in May 2024. More details of the data collection can be found in <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib12" title="">12</a>]</cite>.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_subsection" id="S2.SS2">
+<h3 class="ltx_title ltx_title_subsection">
+<span class="ltx_tag ltx_tag_subsection">2.2 </span>Feature selection and extraction</h3><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S2.SS2.p1">
+<p class="ltx_p">Drawing from existing research in social Q&amp;A and recent NLP studies, we selected 12 features to capture three categories of response characteristics, including rhetorical styles, knowledge coverage, and perceived quality.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S2.SS2.p2">
+<p class="ltx_p">The first category, <span class="ltx_text ltx_font_bold">rhetorical styles</span>, examines the structural patterns exhibited in the responses. Studies in social Q&amp;A have investigated that a variety of quantitative features—including linguistic characteristics <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib11" title="">11</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib13" title="">13</a>]</cite> or rhetorical behaviors <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib21" title="">21</a>]</cite>, such as text length, use of linguistic markers, or references to external links/theories—influence the response satisfaction <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib2" title="">2</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib5" title="">5</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib18" title="">18</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib19" title="">19</a>]</cite>. The second, <span class="ltx_text ltx_font_bold">knowledge coverage</span>, evaluates the extent to which visualization-related knowledge and concepts are included. Prior studies have shown that the breadth of knowledge concepts are important factors to ensure the qualification of knowledge exchange in specific areas of inquiry such as medical/health <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib18" title="">18</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib19" title="">19</a>]</cite> or software engineering <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib2" title="">2</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib5" title="">5</a>]</cite>. The third, <span class="ltx_text ltx_font_bold">perceived quality</span>, assesses how participants rated the adequacy and usefulness of the responses across multiple dimensions. Recent LLM-based studies suggest that human assessments, also referred to as holistic evaluation of automatically generated texts, provide more nuanced quality of text over intrinsic properties such as coverage, depth, or actionability than evaluations based solely on automatic metrics <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib14" title="">14</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib4" title="">4</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib22" title="">22</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib23" title="">23</a>, <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib24" title="">24</a>]</cite>.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S2.SS2.p3">
+<p class="ltx_p">To operationalize these features, we employ the following methods by extracting features from texts and eliciting human perception and satisfaction. First, we computed rhetorical style features by automatically counting quantifiable attributes such as response length and by matching keywords to identify linguistic structures and explanatory styles, based on a predefined list of keywords (e.g., on the other hand, contrary to).</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S2.SS2.p4">
+<p class="ltx_p">Second, to assess the knowledge coverage, we examined how visualization concepts in a well-known visualization model <cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib17" title="">17</a>]</cite> appear in the key ideas and advice of the responses. We expanded four components of visualization design into keywords to conduct keyword matching, by making it a more comprehensive list of keywords using LLMs—specifically, GPT-4o-mini, released in May 2024—through a two-step procedure below:</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S2.SS2.p5">
+<ul class="ltx_itemize" id="S2.I1">
+<li class="ltx_item" id="S2.I1.i1" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="S2.I1.i1.p1">
+<p class="ltx_p">We expanded the original visualization model into a three-level hierarchical taxonomy with more comprehensive collection of 587 keywords through a targeted prompting as presented in Appendix <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#A1" title="Appendix A Prompts for keyword expansion on visualization taxonomy ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">A</span></a>. Two human reviewers validated the expanded taxonomy through an iterative validation process.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</li>
+<li class="ltx_item" id="S2.I1.i2" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="S2.I1.i2.p1">
+<p class="ltx_p">Using the refined model, we first extracted advice segments—portions of responses offering direct recommendations, explanations, or suggestions—to filter out irrelevant content and then identified visualization concepts within these segments. We leveraged LLM capabilities with prompts detailed in Appendix <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#A2" title="Appendix B Prompts for advice identification and visualization concept detection from text ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">B</span></a> to support both steps. To ensure reliability, we validated 10% of randomly selected responses, confirming that the extracted advice accurately reflected the respondents’ feedback and intent.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</li>
+</ul>
+</div>
+<div class="ltx_para" id="S2.SS2.p6">
+<p class="ltx_p">Lastly, to evaluate the perceived quality of responses from <span class="ltx_text ltx_font_smallcaps">Human</span> and <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>, we conducted a survey collecting human evaluations across seven metrics: coverage, breadth, topicality, depth, clarity, actionability, and overall quality. The evaluation metrics followed prior work&nbsp;<cite class="ltx_cite ltx_citemacro_cite">[<a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#bib.bib12" title="">12</a>]</cite>. In the survey, participants assessed a data visualization question alongside two responses—one from <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> and one from a <span class="ltx_text ltx_font_smallcaps">Human</span>—using a comparative five-point Likert scale for each metric. Participants also provided open-ended explanations for their ratings of overall quality.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S2.SS2.p7">
+<p class="ltx_p">We recruited 210 participants through Prolific, assigning them to one of two comparative conditions: <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> vs. <span class="ltx_text ltx_font_smallcaps">Human</span> or <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> vs. <span class="ltx_text ltx_font_smallcaps">Human</span>. Participants evaluated 35 questions randomly sampled from a pool of 119, with sampling determined through a power analysis using McNemar’s test (<math alttext="\alpha" class="ltx_Math" display="inline" id="S2.SS2.p7.m1"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation><annotation encoding="application/x-llamapun">italic_α</annotation></semantics></math> = 0.05, medium effect size, power = 0.80). For each condition, we collected three human responses per question to capture evaluation variability. Participants were compensated $1.90 ($13.67/hr) for completing the 8-minute survey.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_subsection" id="S2.SS3">
+<h3 class="ltx_title ltx_title_subsection">
+<span class="ltx_tag ltx_tag_subsection">2.3 </span>Statistical and regression analysis</h3><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S2.SS3.p1">
+<p class="ltx_p">To address RQ1 (differences in response characteristics, including rhetorical styles and knowledge coverage) and RQ2 (differences in perceived response quality), we performed statistical comparisons between <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> and <span class="ltx_text ltx_font_smallcaps">Human</span> responses. To address RQ3 (factors associated with higher quality responses), we conducted a regression analysis predicting overall quality ratings. We employed Elastic Net regression to mitigate overfitting due to feature correlations and to highlight the predictors most strongly associated with perceived quality.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+</section>
+<section class="ltx_section" id="S3">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section">3 </span>Findings</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S3.p1">
+<p class="ltx_p">Our analysis results reveal several key differences in multifaceted capabilities when comparing <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> and <span class="ltx_text ltx_font_smallcaps">Human</span> performance.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<section class="ltx_paragraph" id="S3.SS0.SSS0.Px1">
+<h4 class="ltx_title ltx_title_paragraph">
+<span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span>&nbsp;more closely matches <span class="ltx_text ltx_font_smallcaps">Human</span>&nbsp;rhetorical styles and knowledge coverage.</h4><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S3.SS0.SSS0.Px1.p1">
+<p class="ltx_p">In response to RQ1, our comparative analysis shows that <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> aligns more closely with <span class="ltx_text ltx_font_smallcaps">Human</span> in both knowledge coverage and rhetorical style than <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span>, while the two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s have a common ground that makes them distinct from <span class="ltx_text ltx_font_smallcaps">Human</span>, as detailed below (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>).</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px1.p2">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Rhetorical style.</span> As shown in Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>-i, the overall responses differed in their length, where <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> responses were twice as long as those of <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> and <span class="ltx_text ltx_font_smallcaps">Human</span>. On the other hand, in the analysis of normalized features (i.e., features per unit word count), <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> and <span class="ltx_text ltx_font_smallcaps">Human</span> exhibited higher lexical diversity (i.e., # unique keywords) and more complex sentence structure than <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span>. Their responses showed much dense representation of ideas in a short span of texts than <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span>, especially for the case of <span class="ltx_text ltx_font_smallcaps">Human</span> responses with the advice-to-word ratio significantly higher than the others.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px1.p3">
+<p class="ltx_p">When it comes to explanatory strategies, on the other hand, two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s were distinct from the <span class="ltx_text ltx_font_smallcaps">Human</span> counterpart in ways they described their feedback. For instance, <span class="ltx_text ltx_font_smallcaps">Human</span> responses tended to use more references and information sources compared to two versions of <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s with almost no references. The use of sequential markers (e.g., first, lastly) was observed exclusively in <span class="ltx_text ltx_font_smallcaps">Human</span> responses. In contrast, <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s frequently employed contrastive language to highlight differences as shown in Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.F4" title="Figure 4 ‣ Multiple characteristics of responses collectively shape the overall preferences. ‣ 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">4</span></a>-i.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px1.p4">
+<p class="ltx_p">While mostly in common, two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s also exhibited different styles, where <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> more commonly relied on examples or bullet-point-like listings (see the example in Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.F4" title="Figure 4 ‣ Multiple characteristics of responses collectively shape the overall preferences. ‣ 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">4</span></a>-i).</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px1.p5">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Knowledge coverage.</span> In the analysis of the knowledge representation (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>-ii), we found that two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s exhibit a similar span of visualization knowledge to that of <span class="ltx_text ltx_font_smallcaps">Human</span>, given the distribution of the visualization concept ratio that did not differ significantly between them. From the Chi-square analysis, <span class="ltx_text ltx_font_smallcaps">Human</span> placed significantly more emphasis on domain problems (i.e., understanding data characteristics), whereas <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s more frequently addressed generic interaction techniques such as detail-on-demand in tooltips or drill-down views than <span class="ltx_text ltx_font_smallcaps">Human</span> does. However, when measuring the distance from the knowledge distribution of <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> and <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> to that of <span class="ltx_text ltx_font_smallcaps">Human</span>, <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> ’s knowledge span was closer to human than that of <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span>, indicating that <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> better approximates human-like knowledge coverage.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_paragraph" id="S3.SS0.SSS0.Px2">
+<h4 class="ltx_title ltx_title_paragraph">
+<span class="ltx_text ltx_font_smallcaps">ChatGPT</span> responses are generally more preferred over human responses.</h4><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S3.SS0.SSS0.Px2.p1">
+<p class="ltx_p">In response to RQ2 (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>-iii), we found that both <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s obtained higher scores across all intrinsic qualities than <span class="ltx_text ltx_font_smallcaps">Human</span> (all scores <math alttext="&gt;" class="ltx_Math" display="inline" id="S3.SS0.SSS0.Px2.p1.m1"><semantics><mo>&gt;</mo><annotation encoding="application/x-tex">&gt;</annotation><annotation encoding="application/x-llamapun">&gt;</annotation></semantics></math> 3). <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>-generated responses were perceived better than human responses for all metrics, especially by larger margins in coverage, breadth, and overall quality. Participants in their open responses mentioned that, despite the strengths of human responses such as including “<span class="ltx_text ltx_font_italic">someone’s experience rather than a textbook explanation</span>” with “<span class="ltx_text ltx_font_italic">targeted and specific tips</span>” in “<span class="ltx_text ltx_font_italic">natural</span>” tones, they lack “<span class="ltx_text ltx_font_italic">depth and enough information</span>” to make a clear decision, as well as “<span class="ltx_text ltx_font_italic">non-user-friendly structure without numbered points</span>” and often “<span class="ltx_text ltx_font_italic">go off the track</span>” with information irrelevant to the questions.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px2.p2">
+<p class="ltx_p">Despite <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s being preferred over <span class="ltx_text ltx_font_smallcaps">Human</span>, two versions of <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s demonstrated distinct strengths in perceived quality when compared against each other. Specifically, <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> was highly rated in coverage, breadth, and depth better than <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span>, which is in relation to its extensive description of their responses. Participants mentioned in their open responses that <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> “<span class="ltx_text ltx_font_italic">covers different possibilities and gives the benefits of each of them</span>” (coverage) as well as “<span class="ltx_text ltx_font_italic">offers exceptional coverage</span>” (breadth) and “<span class="ltx_text ltx_font_italic">provides [structured] guides of explanation in detail</span>” (depth). On the other hand, <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span>’s overall quality was higher than <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span>’s, particularly in terms of topicality, clarity, and actionability. as <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> was found to “<span class="ltx_text ltx_font_italic">make it much easier to stay focused and on topic with better structure of the answer</span>” (clarity and topicality) and “<span class="ltx_text ltx_font_italic">presents alternative visual cues</span>” (actionability).</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<figure class="ltx_figure" id="S3.F3"><img alt="Refer to caption" class="ltx_graphics ltx_img_portrait" height="1070" id="S3.F3.g1" src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/x3.png" width="830">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 3: </span>
+The regression analysis identifies major factors associated with i) users’ general preferences and ii) their preferences in favor of certain response source.</figcaption>
+</figure><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</section>
+<section class="ltx_paragraph" id="S3.SS0.SSS0.Px3">
+<h4 class="ltx_title ltx_title_paragraph">Multiple characteristics of responses collectively shape the overall preferences.</h4><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S3.SS0.SSS0.Px3.p1">
+<p class="ltx_p">Two regression models—one across all response sources and another within each response source—reveal what factors collectively shape (1) users’ general preferences over certain responses and (2) their preferences in favor of certain response sources over others.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px3.p2">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Factors associated with general preferences.</span>
+From the overall model (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.F3" title="Figure 3 ‣ ChatGPT responses are generally more preferred over human responses. ‣ 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">3</span></a>-i), 12 factors were identified to highly influence user perception of the overall quality of responses across all response sources. Specifically, coverage and topicality were identified as the most dominantly impactful factors, indicating that people anticipate a feedback response to the point and cover all aspects of the inquiry. In addition, participants were in favor of certain types of knowledge, primarily on the higher-level feedback such as comparison and presentation tasks rather than other visualization concepts. Regarding explanatory strategies, responses were generally perceived as more useful when including examples and analogies.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<figure class="ltx_figure" id="S3.F4"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="374" id="S3.F4.g1" src="./Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice_files/x4.png" width="747">
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 4: </span>
+The case study highlights two representative cases of visualization-related user question and responses from three different sources, including i) asking visualization knowledge and ii) seeking visualization design feedback. In the examples, they are distinct from each other in terms of their key insights and feedback (as underlined) and rhetorical and knowledge characteristics (as highlighted with color).</figcaption>
+</figure><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S3.SS0.SSS0.Px3.p3">
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Factors associated with preferences for specific response sources.</span>
+
+The results from the response-source-specific models (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.F3" title="Figure 3 ‣ ChatGPT responses are generally more preferred over human responses. ‣ 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">3</span></a>-ii) revealed how each source (<span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5/4</span> or <span class="ltx_text ltx_font_smallcaps">Human</span>) was comparatively more preferable than its counterpart (<span class="ltx_text ltx_font_smallcaps">Human</span> or <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>). In terms of perceived quality, two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> models’ coverage and breadth showed stronger associations with overall quality than those of <span class="ltx_text ltx_font_smallcaps">Human</span>. Meanwhile, <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> and <span class="ltx_text ltx_font_smallcaps">Human</span>’s clarity and depth were more closely linked to higher quality ratings than <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span>, suggesting that users value different strengths from each response source.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S3.SS0.SSS0.Px3.p4">
+<p class="ltx_p">Furthermore, each response source demonstrated a distinct association between its knowledge, rhetorical style, and the perceived overall quality. Consistent with two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span>s’ characteristics described in Section <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3" title="3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">3</span></a>, their frequent use of contrast in explanatory styles, along with a greater focus on technique-oriented visualization concepts—relation task and dimensionality reduction for <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> and presentation task for <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> —were associated with users’ higher perceived quality of responses. Human responses, on the other hand, were rated more favorably due to more references to theoretical concepts and certain visualization knowledge, especially interaction techniques, perceptual &amp; cognitive factors, and visual encoding. On the other hand, a number of features regarding information quantity, other stylistic and knowledge features were found to be insignificant in influencing the overall quality.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+</section>
+<section class="ltx_section" id="S4">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section">4 </span>Case Study</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S4.p1">
+<p class="ltx_p">In this section, we demonstrate how the differences among the three sources—regarding the multidimensional characteristics of their responses discussed in Section <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3" title="3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">3</span></a>—are reflected in actual texts, using two specific visualization-related Q&amp;A examples. In these examples, we also highlight how they convey distinct key insights, which go beyond differences in rhetorical style and knowledge.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S4.p2">
+<p class="ltx_p">The first case (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.F4" title="Figure 4 ‣ Multiple characteristics of responses collectively shape the overall preferences. ‣ 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">4</span></a>-i) highlights how three sources exhibit differences in their perspectives and styles in answering a knowledge-oriented visualization query—why bar charts and scatter plots, even though both use x and y axes, are considered one-dimensional and two-dimensional, respectively. As featured earlier (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>-i), two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> models commonly <span class="ltx_text ltx_font_bold">use contrast</span> to highlight differences between the two chart types. However, in their key insights, <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> emphasizes different purposes of each chart type (e.g., comparing values along a single dimension vs. examining relationships between two variables), while <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> highlights how quantitative variables are mapped to spatial dimensions, linking this to the notion of dimensionality. the human response, while aligned with <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span> ’s interpretation in highlighting data structure and encoding, offers a <span class="ltx_text ltx_font_bold">reasoning process</span> of how two plots fundamentally differ from each other <span class="ltx_text ltx_font_bold">in a step-by-step manner</span>. Starting by acknowledging the ambiguity in defining dimensionality in charts, it presents a key perspective that the distinction lies in binning, in a step-by-step walk-through with Python code and references to a data analysis tool.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S4.p3">
+<p class="ltx_p">In the second example (Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S3.F4" title="Figure 4 ‣ Multiple characteristics of responses collectively shape the overall preferences. ‣ 3 Findings ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">4</span></a>-ii), the three response sources also took noticeably different approaches, key ideas, and focal knowledge in providing feedback regarding the use of a pie chart, color choices, and the overall layout of a composite interface. As highlighted in Figure <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>-i, the human response stood out for its <span class="ltx_text ltx_font_bold">theoretical depth, referencing perceptual principles</span> such as pre-attentive processing or data-ink ratio, along with citations for graphical perception and domain-specific insights about color choice with respect to the types of energy generator. Compared to <span class="ltx_text ltx_font_smallcaps">Human</span>, two <span class="ltx_text ltx_font_smallcaps">ChatGPT</span> responses were grounded in <span class="ltx_text ltx_font_bold">practical solutions</span> by commonly making an emphasis on interaction techniques, as previously highlighted in <a class="ltx_ref" href="https://arxiv.org/html/2508.01547v1#S2.F2" title="Figure 2 ‣ 2 Methods ‣ Understanding Why ChatGPT Outperforms Humans in Visualization Design Advice"><span class="ltx_text ltx_ref_tag">2</span></a>-ii, but with approaches quite distinct from each other. <span class="ltx_text ltx_font_smallcaps">ChatGPT-3.5</span> <span class="ltx_text ltx_font_bold">took a conservative stance</span>, recommending an incremental improvement—such as clearer labeling, consistent color coding, and interactive elements like tooltips. <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span>, on the other hand, <span class="ltx_text ltx_font_bold">proposed more fundamental changes</span>, suggesting an alternative chart type (e.g., stacked bar charts) and the inclusion of interactive features.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_section" id="S5">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section">5 </span>Discussion &amp; Conclusion</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S5.p1">
+<p class="ltx_p">In this work, we investigated why and how ChatGPT has better capabilities than human in giving visualization feedback. Based on findings, we draw implications for the potential of LLMs and human perception over capabilities over broader applications of AI.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S5.p2">
+<p class="ltx_p">First, our analysis shows that LLMs provide solid visualization feedback and make progress toward combining the strengths of both human feedback and their own capabilities. As observed with <span class="ltx_text ltx_font_smallcaps">ChatGPT-4</span>, the model demonstrated both extensive knowledge of machine intelligence and human-like text generation. While this indicates that LLMs can serve as alternatives to human feedback, humans are still distinct from LLMs and outperform in some dimensions such as domain-specific problem knowledge and heuristics, step-by-step guidance, and references to theoretical frameworks. Thus, exploring ways in
+which humans and AI can complement each other may yield better knowledge outcomes or offer a pathway to further advance LLMs
+by learning from how humans articulate their intent and feedback.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="S5.p3">
+<p class="ltx_p">Furthermore, our regression analysis revealed that human evaluation is highly discriminative—users do not simply reward verbosity or surface-level traits, but instead respond to specific types of knowledge and explanatory strategies. This finding sheds light on the properties that enable chat-based services to deliver generally satisfying responses, particularly by designing prompt strategies that incorporate effective explanatory techniques. In addition, we observed substantial variation in individual user preferences regarding style, knowledge depth, and quality dimensions. These insights highlight the need for personalization; for example, some users may prefer concise lists of action items, whereas others may find detailed explanations and references to specific knowledge more informative. We find that enhancing user experience may be achieved by designing systems that present a range of response options explicitly or that motivate users to refine their queries or encourage follow-up prompts through some strategies such as cognitive prompts or nudging techniques. In addition, future work can enhance the generalizability of our analysis by leveraging larger datasets to control quality variations as well as advanced LLM models, and conducting task-based evaluations.</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_section" id="S6">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section">6 </span>Acknowledgement</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="S6.p1">
+<p class="ltx_p">We would like to acknowledge the support of the National Science Foundation (#2146868).</p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_bibliography" id="bib">
+<h2 class="ltx_title ltx_title_bibliography">References</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<ul class="ltx_biblist">
+<li class="ltx_bibitem" id="bib.bib1">
+<span class="ltx_tag ltx_tag_bibitem">[1]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+Data visualization society surveys.
+
+</span>
+<span class="ltx_bibblock">Accessed on Sep 9, 2023.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib2">
+<span class="ltx_tag ltx_tag_bibitem">[2]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+A.&nbsp;Ahmad, C.&nbsp;Feng, S.&nbsp;Ge, and A.&nbsp;Yousif.
+
+</span>
+<span class="ltx_bibblock">A survey on mining stack overflow: question and answering (q&amp;a) community.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">Data Technologies and Applications</span>, 52(2):190–247, 2018.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib3">
+<span class="ltx_tag ltx_tag_bibitem">[3]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+J.&nbsp;Alexander, P.&nbsp;Nanda, K.-C. Yang, and A.&nbsp;Sarvghad.
+
+</span>
+<span class="ltx_bibblock">Can gpt-4 models detect misleading visualizations?
+
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_font_italic">2024 IEEE Visualization and Visual Analytics (VIS)</span>, pp. 106–110. IEEE, 2024.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib4">
+<span class="ltx_tag ltx_tag_bibitem">[4]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+R.&nbsp;Awasthi, S.&nbsp;Mishra, D.&nbsp;Mahapatra, A.&nbsp;Khanna, K.&nbsp;Maheshwari, J.&nbsp;Cywinski, F.&nbsp;Papay, and P.&nbsp;Mathur.
+
+</span>
+<span class="ltx_bibblock">Humanely: Human evaluation of llm yield, using a novel web-based evaluation tool.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">MedRXIV</span>, pp. 2023–12, 2023.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib5">
+<span class="ltx_tag ltx_tag_bibitem">[5]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+A.&nbsp;Barua, S.&nbsp;W. Thomas, and A.&nbsp;E. Hassan.
+
+</span>
+<span class="ltx_bibblock">What are developers talking about? an analysis of topics and trends in stack overflow.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">Empirical software engineering</span>, 19:619–654, 2014.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib6">
+<span class="ltx_tag ltx_tag_bibitem">[6]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+A.&nbsp;Bendeck and J.&nbsp;Stasko.
+
+</span>
+<span class="ltx_bibblock">An empirical evaluation of the gpt-4 multimodal language model on visualization literacy tasks.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">IEEE Transactions on Visualization and Computer Graphics</span>, 2024.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib7">
+<span class="ltx_tag ltx_tag_bibitem">[7]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+K.&nbsp;Choe, C.&nbsp;Lee, S.&nbsp;Lee, J.&nbsp;Song, A.&nbsp;Cho, N.&nbsp;W. Kim, and J.&nbsp;Seo.
+
+</span>
+<span class="ltx_bibblock">Enhancing data literacy on-demand: Llms as guides for novices in chart interpretation.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">IEEE Transactions on Visualization and Computer Graphics</span>, 2024.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib8">
+<span class="ltx_tag ltx_tag_bibitem">[8]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+J.&nbsp;Choi, C.&nbsp;Oh, Y.-S. Kim, and N.&nbsp;W. Kim.
+
+</span>
+<span class="ltx_bibblock">Vislab: Enabling visualization designers to gather empirically informed design feedback.
+
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_font_italic">Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems</span>, CHI ’23. Association for Computing Machinery, New York, NY, USA, 2023. doi: 10.1145/3544548.3581132
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib9">
+<span class="ltx_tag ltx_tag_bibitem">[9]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+A.&nbsp;Diehl, A.&nbsp;Abdul-Rahman, M.&nbsp;El-Assady, B.&nbsp;Bach, D.&nbsp;Keim, and M.&nbsp;Chen.
+
+</span>
+<span class="ltx_bibblock">VisGuides: A Forum for Discussing Visualization Guidelines.
+
+</span>
+<span class="ltx_bibblock">In J.&nbsp;Johansson, F.&nbsp;Sadlo, and T.&nbsp;Schreck, eds., <span class="ltx_text ltx_font_italic">EuroVis 2018 - Short Papers</span>. The Eurographics Association, 2018. doi: 10.2312/eurovisshort.20181079
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib10">
+<span class="ltx_tag ltx_tag_bibitem">[10]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+S.&nbsp;Esteves and M.&nbsp;Neves.
+
+</span>
+<span class="ltx_bibblock">“i learned it on the job” becoming a data visualization professional in news media.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">Information Design Journal</span>, 27(3):309–319, 2022. doi: 10.1075/idj.22004.est
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib11">
+<span class="ltx_tag ltx_tag_bibitem">[11]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+H.&nbsp;Fu, S.&nbsp;Wu, and S.&nbsp;Oh.
+
+</span>
+<span class="ltx_bibblock">Evaluating answer quality across knowledge domains: Using textual and non-textual features in social q&amp;a.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">Proceedings of the Association for Information Science and Technology</span>, 52(1):1–5, 2015.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib12">
+<span class="ltx_tag ltx_tag_bibitem">[12]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+N.&nbsp;W. Kim, G.&nbsp;Myers, and B.&nbsp;Bach.
+
+</span>
+<span class="ltx_bibblock">How good is chatgpt in giving advice on your visualization design?
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">arXiv preprint arXiv:2310.09617</span>, 2023.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib13">
+<span class="ltx_tag ltx_tag_bibitem">[13]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+L.&nbsp;Li, D.&nbsp;He, W.&nbsp;Jeng, S.&nbsp;Goodwin, and C.&nbsp;Zhang.
+
+</span>
+<span class="ltx_bibblock">Answer quality characteristics and prediction on an academic q&amp;a site: A case study on researchgate.
+
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_font_italic">Proceedings of the 24th international conference on world wide web</span>, pp. 1453–1458, 2015.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib14">
+<span class="ltx_tag ltx_tag_bibitem">[14]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+P.&nbsp;Liang, R.&nbsp;Bommasani, T.&nbsp;Lee, D.&nbsp;Tsipras, D.&nbsp;Soylu, M.&nbsp;Yasunaga, Y.&nbsp;Zhang, D.&nbsp;Narayanan, Y.&nbsp;Wu, A.&nbsp;Kumar, et&nbsp;al.
+
+</span>
+<span class="ltx_bibblock">Holistic evaluation of language models.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">arXiv preprint arXiv:2211.09110</span>, 2022.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib15">
+<span class="ltx_tag ltx_tag_bibitem">[15]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+L.&nbsp;Y.-H. Lo and H.&nbsp;Qu.
+
+</span>
+<span class="ltx_bibblock">How good (or bad) are llms at detecting misleading visualizations?
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">IEEE Transactions on Visualization and Computer Graphics</span>, 2024.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib16">
+<span class="ltx_tag ltx_tag_bibitem">[16]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+K.&nbsp;Luther, J.-L. Tolentino, W.&nbsp;Wu, A.&nbsp;Pavel, B.&nbsp;P. Bailey, M.&nbsp;Agrawala, B.&nbsp;Hartmann, and S.&nbsp;P. Dow.
+
+</span>
+<span class="ltx_bibblock">Structuring, aggregating, and evaluating crowdsourced design critique.
+
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_font_italic">Proceedings of the 18th ACM Conference on Computer Supported Cooperative Work &amp;amp; Social Computing</span>, CSCW ’15, p. 473–485. Association for Computing Machinery, New York, NY, USA, 2015. doi: 10.1145/2675133.2675283
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib17">
+<span class="ltx_tag ltx_tag_bibitem">[17]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+T.&nbsp;Munzner.
+
+</span>
+<span class="ltx_bibblock">A nested model for visualization design and validation.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">IEEE transactions on visualization and computer graphics</span>, 15(6):921–928, 2009.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib18">
+<span class="ltx_tag ltx_tag_bibitem">[18]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+H.&nbsp;Naderi, S.&nbsp;Madani, B.&nbsp;Kiani, and K.&nbsp;Etminani.
+
+</span>
+<span class="ltx_bibblock">Similarity of medical concepts in question and answering of health communities.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">Health informatics journal</span>, 26(2):1443–1454, 2020.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib19">
+<span class="ltx_tag ltx_tag_bibitem">[19]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+M.&nbsp;S. Park, Z.&nbsp;He, Z.&nbsp;Chen, S.&nbsp;Oh, and J.&nbsp;Bian.
+
+</span>
+<span class="ltx_bibblock">Consumers’ use of umls concepts on social media: diabetes-related textual data analysis in blog and social q&amp;a sites.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">JMIR medical informatics</span>, 4(4):e41, 2016.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib20">
+<span class="ltx_tag ltx_tag_bibitem">[20]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+P.&nbsp;Parsons.
+
+</span>
+<span class="ltx_bibblock">Understanding data visualization design practice.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">IEEE Transactions on Visualization and Computer Graphics</span>, 28(1):665–675, 2022. doi: 10.1109/TVCG.2021.3114959
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib21">
+<span class="ltx_tag ltx_tag_bibitem">[21]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+C.&nbsp;Shah and J.&nbsp;Pomerantz.
+
+</span>
+<span class="ltx_bibblock">Evaluating and predicting answer quality in community qa.
+
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_font_italic">Proceedings of the 33rd international ACM SIGIR conference on Research and development in information retrieval</span>, pp. 411–418, 2010.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib22">
+<span class="ltx_tag ltx_tag_bibitem">[22]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+M.&nbsp;N. Sreedhar, T.&nbsp;Rebedea, S.&nbsp;Ghosh, J.&nbsp;Zeng, and C.&nbsp;Parisien.
+
+</span>
+<span class="ltx_bibblock">Canttalkaboutthis: Aligning language models to stay on topic in dialogues.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">arXiv preprint arXiv:2404.03820</span>, 2024.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib23">
+<span class="ltx_tag ltx_tag_bibitem">[23]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+C.&nbsp;Van&nbsp;der Lee, A.&nbsp;Gatt, E.&nbsp;Van&nbsp;Miltenburg, and E.&nbsp;Krahmer.
+
+</span>
+<span class="ltx_bibblock">Human evaluation of automatically generated text: Current trends and best practice guidelines.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_font_italic">Computer Speech &amp; Language</span>, 67:101151, 2021.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib24">
+<span class="ltx_tag ltx_tag_bibitem">[24]<button class="back-to-reference-btn" aria-label="Back to the article">↑</button></span>
+<span class="ltx_bibblock">
+E.&nbsp;Van&nbsp;Miltenburg, D.&nbsp;Elliott, and P.&nbsp;Vossen.
+
+</span>
+<span class="ltx_bibblock">Measuring the diversity of automatic image descriptions.
+
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_font_italic">Proceedings of the 27th International Conference on Computational Linguistics</span>, pp. 1730–1741, 2018.
+
+</span>
+</li>
+</ul>
+</section>
+<section class="ltx_appendix" id="A1">
+<h2 class="ltx_title ltx_title_appendix">
+<span class="ltx_tag ltx_tag_appendix">Appendix A </span>Prompts for keyword expansion on visualization taxonomy</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="A1.p1">
+<span class="ltx_ERROR undefined">{spverbatim}</span>
+<p class="ltx_p"><span class="ltx_text" style="font-size:90%;">This classification framework organizes visualization knowledge into three hierarchical levels: Level 1 (L1) and Level 2 (L2) denote conceptual categories, while Level 3 (L3) contains associated keywords. Expand the L3 keyword set to improve coverage and enable the detection of visualization-related concepts within text.
+
+</span></p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+<section class="ltx_appendix" id="A2">
+<h2 class="ltx_title ltx_title_appendix">
+<span class="ltx_tag ltx_tag_appendix">Appendix B </span>Prompts for advice identification and visualization concept detection from text</h2><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+<div class="ltx_para" id="A2.p1">
+<span class="ltx_ERROR undefined">{spverbatim}</span>
+<p class="ltx_p"><span class="ltx_text" style="font-size:90%;">The given text is a response to a visualization-related question.</span></p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="A2.p2">
+<p class="ltx_p"><span class="ltx_text" style="font-size:90%;">Conduct the analysis in the following steps:
+1) Identify unique pieces of advice (title and description),
+2) For each advice, detect multiple visualization-related keywords as concepts that appear in the Categories (L1 and L2) attached below, each with L1 and L2 category and phrases/sentences as evidence on which keywords appear.</span></p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="A2.p3">
+<p class="ltx_p"><span class="ltx_text" style="font-size:90%;">As an output, present a list of pairs of visualization advice:(advice_title, advice_description, L1, L2, L3 (keyword), evidence) with the references of Taxonomy in a json format.</span></p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+<div class="ltx_para" id="A2.p4">
+<p class="ltx_p"><span class="ltx_text" style="font-size:90%;">Text: ,
+Categories (L1 and L2): ,
+Taxonomy: 
+
+</span></p><button class="sr-only button" style="display: none;">Report issue for preceding element</button>
+</div>
+</section>
+</article>
+</div>
+
+</div>
+
+
+<button type="button" class="btn btn-primary hover-rp-button" id="openForm">Report Issue</button><div class="modal" id="myForm" role="dialog" aria-labelledby="modal-title"><div class="modal-dialog"><form class="modal-content" id="myFormContent" enctype="multipart/form-data"><div class="modal-header" id="modal-header"><h5 class="modal-title">Report Github Issue</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><label for="form_title" id="modalTitle">Title:</label><input class="form-control" id="form_title" name="form_title" required="required" placeholder="Enter title"><label for="description" id="selectedTextModalDescription" style="display: none;">Content selection saved. Describe the issue below:</label><label for="description" id="nomralModalDescription">Description:</label><textarea class="form-control" id="description" name="description" required="required" style="height: 80px;" maxlength="500" placeholder="500 characters maximum"></textarea></div><div class="modal-footer d-flex justify-content-end"><button type="submit" class="sr-only button" id="modal-submit-sr">Submit without Github</button><button type="submit" class="btn btn-primary" id="modal-submit">Submit in Github</button></div></form></div></div><button id="small-report-button" type="button" class="btn btn-secondary btn-sm" style="background-color: rgb(179, 27, 27); position: fixed; display: none;">Report Issue for Selection</button><div class="ltx_page_footer">
+        <div class="ltx_page_logo">
+            Generated by
+            <a href="https://math.nist.gov/~BMiller/LaTeXML/" class="ltx_LaTeXML_logo">
+                <span style="letter-spacing: -0.2em; margin-right: 0.1em;">
+                    L
+                    <span style="font-size: 70%; position: relative; bottom: 2.2pt;">A</span>
+                    T
+                    <span style="position: relative; bottom: -0.4ex;">E</span>
+                </span>
+                <span class="ltx_font_smallcaps">xml</span>
+                <img alt="[LOGO]" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKExQZLWTEaOUAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAdpJREFUKM9tkL+L2nAARz9fPZNCKFapUn8kyI0e4iRHSR1Kb8ng0lJw6FYHFwv2LwhOpcWxTjeUunYqOmqd6hEoRDhtDWdA8ApRYsSUCDHNt5ul13vz4w0vWCgUnnEc975arX6ORqN3VqtVZbfbTQC4uEHANM3jSqXymFI6yWazP2KxWAXAL9zCUa1Wy2tXVxheKA9YNoR8Pt+aTqe4FVVVvz05O6MBhqUIBGk8Hn8HAOVy+T+XLJfLS4ZhTiRJgqIoVBRFIoric47jPnmeB1mW/9rr9ZpSSn3Lsmir1fJZlqWlUonKsvwWwD8ymc/nXwVBeLjf7xEKhdBut9Hr9WgmkyGEkJwsy5eHG5vN5g0AKIoCAEgkEkin0wQAfN9/cXPdheu6P33fBwB4ngcAcByHJpPJl+fn54mD3Gg0NrquXxeLRQAAwzAYj8cwTZPwPH9/sVg8PXweDAauqqr2cDjEer1GJBLBZDJBs9mE4zjwfZ85lAGg2+06hmGgXq+j3+/DsixYlgVN03a9Xu8jgCNCyIegIAgx13Vfd7vdu+FweG8YRkjXdWy329+dTgeSJD3ieZ7RNO0VAXAPwDEAO5VKndi2fWrb9jWl9Esul6PZbDY9Go1OZ7PZ9z/lyuD3OozU2wAAAABJRU5ErkJggg==">
+            </a>
+        </div></div><footer id="footer" class="ltx_document">
+        <div class="keyboard-glossary">
+            <h2>Instructions for reporting errors</h2>
+            <p>We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the methods listed below:</p>
+            <ul>
+                <li>Click the "Report Issue" button.</li>
+                <li>Open a report feedback form via keyboard, use "<strong>Ctrl + ?</strong>".</li>
+                <li>Make a text selection and click the "Report Issue for Selection" button near your cursor.</li>
+                <li class="sr-only">You can use Alt+Y to toggle on and Alt+Shift+Y to toggle off accessible reporting links at each section.</li>
+            </ul>
+            <p>Our team has already identified <a class="ltx_ref" href="https://github.com/arXiv/html_feedback/issues" target="_blank">the following issues</a>. We appreciate your time reviewing and reporting rendering errors we may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability should not be a barrier to accessing research. Thank you for your continued support in championing open access for all.</p>
+            <p>Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a <a class="ltx_ref" href="https://github.com/brucemiller/LaTeXML/wiki/Porting-LaTeX-packages-for-LaTeXML" target="_blank">list of packages that need conversion</a>, and welcome <a class="ltx_ref" href="https://github.com/brucemiller/LaTeXML/issues" target="_blank">developer contributions</a>.</p>
+        </div>
+    </footer></body></html>
