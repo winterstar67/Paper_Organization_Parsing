@@ -6,6 +6,83 @@ from datetime import datetime
 import time
 import pickle
 import xml.dom.minidom
+import re
+
+def remove_outer_tags_and_check_rule(html_with_tags):
+    """
+    HTML에서 외부 div와 span 태그를 제거하고 규칙 위배 여부를 확인합니다.
+    
+    규칙:
+    1. 첫 번째 태그: <div class="ltx_authors">
+    2. 두 번째 태그: <span class="ltx_creator ltx_role_author">
+    3. 마지막에서 두 번째 태그: </span>
+    4. 마지막 태그: </div>
+    
+    Args:
+        html_with_tags (str): HTML 문자열
+        
+    Returns:
+        tuple: (filtered_html, rule_violation_message)
+               - filtered_html: 외부 태그가 제거된 HTML
+               - rule_violation_message: 규칙 위배시 메시지, 정상시 None
+    """
+    if html_with_tags in ["NO_HTML", "NO_ltx_authors"]:
+        return html_with_tags, None
+    
+    try:
+        lines = html_with_tags.strip().split('\n')
+        lines = [line for line in lines if line.strip()]  # 빈 줄 제거
+        
+        if len(lines) < 4:
+            return html_with_tags, "Too few lines to apply rule"
+        
+        # 규칙 검사
+        first_line = lines[0].strip()
+        second_line = lines[1].strip()
+        second_last_line = lines[-2].strip()
+        last_line = lines[-1].strip()
+        
+        # 하드코딩된 규칙 체크
+        expected_first = '<div class="ltx_authors">'
+        expected_second = '<span class="ltx_creator ltx_role_author">'
+        expected_second_last = '</span>'
+        expected_last = '</div>'
+        
+        rule_violation = []
+        
+        if first_line != expected_first:
+            rule_violation.append(f"First tag mismatch: expected '{expected_first}', got '{first_line}'")
+        
+        if second_line != expected_second:
+            rule_violation.append(f"Second tag mismatch: expected '{expected_second}', got '{second_line}'")
+        
+        if second_last_line != expected_second_last:
+            rule_violation.append(f"Second last tag mismatch: expected '{expected_second_last}', got '{second_last_line}'")
+        
+        if last_line != expected_last:
+            rule_violation.append(f"Last tag mismatch: expected '{expected_last}', got '{last_line}'")
+        
+        # 규칙 위배가 있으면 메시지 반환
+        if rule_violation:
+            violation_message = "; ".join(rule_violation)
+            return html_with_tags, violation_message
+        
+        # 규칙이 정상이면 외부 4개 태그 제거
+        inner_lines = lines[2:-2]  # 첫 2줄과 마지막 2줄 제거
+        
+        # 들여쓰기 조정 (4칸씩 줄임)
+        adjusted_lines = []
+        for line in inner_lines:
+            if line.startswith('    '):  # 4칸 이상 들여쓰기된 경우
+                adjusted_lines.append(line[4:])  # 4칸 제거
+            else:
+                adjusted_lines.append(line)
+        
+        filtered_html = '\n'.join(adjusted_lines)
+        return filtered_html, None
+        
+    except Exception as e:
+        return html_with_tags, f"Error processing HTML: {str(e)}"
 
 def extract_ltx_authors(html_url):
     """
@@ -145,6 +222,38 @@ def save_html_raw_text_with_tags_txt(df):
     except Exception as e:
         print(f"TXT 저장 중 오류 발생 (태그 포함): {str(e)}")
 
+def save_html_raw_text_filtered_pickle(df):
+    """html_raw_text_with_tags_filtered 데이터를 pickle 형식으로 저장합니다."""
+    try:
+        # html_raw_text_with_tags_filtered 컬럼만 추출
+        html_raw_text_filtered_data = df['html_raw_text_with_tags_filtered'].tolist()
+        
+        # pickle 파일로 저장
+        pickle_path = "./results/html_raw_text_with_tags_filtered.p"
+        with open(pickle_path, 'wb') as f:
+            pickle.dump(html_raw_text_filtered_data, f)
+        
+        print(f"Pickle 파일 저장 완료 (필터링된 태그): {pickle_path}")
+        
+    except Exception as e:
+        print(f"Pickle 저장 중 오류 발생 (필터링된 태그): {str(e)}")
+
+def save_html_raw_text_filtered_txt(df):
+    """html_raw_text_with_tags_filtered 데이터를 txt 파일로 저장합니다."""
+    try:
+        txt_path = "./results/html_raw_text_with_tags_filtered.txt"
+        
+        with open(txt_path, 'w', encoding='utf-8') as f:
+            for idx, text in enumerate(df['html_raw_text_with_tags_filtered']):
+                f.write(f"=== Paper {idx + 1} ===\n")
+                f.write(str(text))
+                f.write("\n" + "="*50 + "\n\n")
+        
+        print(f"TXT 파일 저장 완료 (필터링된 태그): {txt_path}")
+        
+    except Exception as e:
+        print(f"TXT 저장 중 오류 발생 (필터링된 태그): {str(e)}")
+
 def main():
     """메인 실행 함수"""
     # CSV 파일 읽기
@@ -155,9 +264,11 @@ def main():
         df = pd.read_csv(input_file)[:3]
         print(f"총 {len(df)}개의 논문 데이터를 로드했습니다.")
         
-        # html_raw_text 및 html_raw_text_with_tags 컬럼 초기화
+        # 필요한 컬럼들 초기화
         df['html_raw_text'] = ""
         df['html_raw_text_with_tags'] = ""
+        df['html_raw_text_with_tags_filtered'] = ""
+        df['tag_rule_violation'] = ""
         
         # 각 HTML URL에서 ltx_authors 태그 내용 추출
         for idx, row in df.iterrows():
@@ -169,6 +280,11 @@ def main():
             text_only, html_with_tags = extract_ltx_authors(html_url)
             df.at[idx, 'html_raw_text'] = text_only
             df.at[idx, 'html_raw_text_with_tags'] = html_with_tags
+            
+            # 외부 태그 제거 및 규칙 검사
+            filtered_html, rule_violation = remove_outer_tags_and_check_rule(html_with_tags)
+            df.at[idx, 'html_raw_text_with_tags_filtered'] = filtered_html
+            df.at[idx, 'tag_rule_violation'] = rule_violation if rule_violation else ""
             
             # 20개마다 10초 대기 (서버 부하 방지)
             if (idx + 1) % 20 == 0:
@@ -193,6 +309,10 @@ def main():
         # html_raw_text_with_tags 데이터를 pickle과 txt로도 저장
         save_html_raw_text_with_tags_pickle(df)
         save_html_raw_text_with_tags_txt(df)
+        
+        # html_raw_text_with_tags_filtered 데이터를 pickle과 txt로도 저장
+        save_html_raw_text_filtered_pickle(df)
+        save_html_raw_text_filtered_txt(df)
         
         # 결과 통계
         no_html_count = len(df[df['html_raw_text'] == 'NO_HTML'])

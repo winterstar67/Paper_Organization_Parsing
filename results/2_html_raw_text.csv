@@ -1,4 +1,4 @@
-﻿ID,Collected_date,abs_url,html_url,Title,Authors,Submitted,Originally_announced,Subjects,html_raw_text
+﻿ID,Collected_date,abs_url,html_url,Title,Authors,Submitted,Originally_announced,Subjects,html_raw_text,html_raw_text_with_tags,html_raw_text_with_tags_filtered,tag_rule_violation
 0,2025-08-24 13:28:33,https://arxiv.org/abs/2508.11647,https://arxiv.org/html/2508.11647,Categorical Construction of Logically Verifiable Neural Architectures,Logan Nye,"2 August, 2025",August 2025,cs.LO; cs.AI,"
 
 Logan Nye, MD
@@ -11,7 +11,50 @@ lnye@andrew.cmu.edu
 
 ORCID: 0009-0002-9136-045X
 
-"
+","<div class=""ltx_authors"">
+  <span class=""ltx_creator ltx_role_author"">
+    <span class=""ltx_personname"">
+      <span class=""ltx_text"" style=""font-size:144%;"">
+        Logan Nye, MD
+        <br class=""ltx_break""/>
+        Carnegie Mellon University School of Computer Science
+        <br class=""ltx_break""/>
+        5000 Forbes Ave Pittsburgh, PA 15213 USA
+        <br class=""ltx_break""/>
+        <span class=""ltx_text ltx_font_typewriter"">
+          lnye@andrew.cmu.edu
+          <br class=""ltx_break""/>
+        </span>
+        <span class=""ltx_text"" style=""font-size:63%;"">
+          ORCID:
+          <a class=""ltx_ref ltx_href"" href=""https://orcid.org/0009-0002-9136-045X"" title="""">
+            0009-0002-9136-045X
+          </a>
+        </span>
+      </span>
+    </span>
+  </span>
+</div>
+","<span class=""ltx_personname"">
+  <span class=""ltx_text"" style=""font-size:144%;"">
+    Logan Nye, MD
+    <br class=""ltx_break""/>
+    Carnegie Mellon University School of Computer Science
+    <br class=""ltx_break""/>
+    5000 Forbes Ave Pittsburgh, PA 15213 USA
+    <br class=""ltx_break""/>
+    <span class=""ltx_text ltx_font_typewriter"">
+      lnye@andrew.cmu.edu
+      <br class=""ltx_break""/>
+    </span>
+    <span class=""ltx_text"" style=""font-size:63%;"">
+      ORCID:
+      <a class=""ltx_ref ltx_href"" href=""https://orcid.org/0009-0002-9136-045X"" title="""">
+        0009-0002-9136-045X
+      </a>
+    </span>
+  </span>
+</span>",
 1,2025-08-24 13:28:35,https://arxiv.org/abs/2508.11644,https://arxiv.org/html/2508.11644,HetSyn: Versatile Timescale Integration in Spiking Neural Networks via Heterogeneous Synapses,Zhichao Deng; Zhikun Liu; Junxue Wang; Shengqian Chen; Xiang Wei; Qiang Yu,"1 August, 2025",August 2025,q-bio.NC; cs.LG,"
 
 Zhichao Deng1,  Zhikun Liu111footnotemark: 1,  Junxue Wang1,  Shengqian Chen1,  Xiang Wei1,  Qiang Yu1,2
@@ -19,7 +62,132 @@ Zhichao Deng1,  Zhikun Liu111footnotemark: 1,  Junxue Wang1,  Shengqian Chen1
 2College of Computer and Information Engineering, Tianjin Normal University, Tianjin, China 
 yuqiang@tju.edu.cn
 Equal contribution.Corresponding author.
-"
+","<div class=""ltx_authors"">
+  <span class=""ltx_creator ltx_role_author"">
+    <span class=""ltx_personname"">
+      Zhichao Deng
+      <sup class=""ltx_sup"">
+        1
+      </sup>
+      ,  Zhikun Liu
+      <sup class=""ltx_sup"">
+        1
+      </sup>
+      <span class=""ltx_note ltx_role_footnotemark"" id=""footnotex1"">
+        <sup class=""ltx_note_mark"">
+          1
+        </sup>
+        <span class=""ltx_note_outer"">
+          <span class=""ltx_note_content"">
+            <sup class=""ltx_note_mark"">
+              1
+            </sup>
+            <span class=""ltx_note_type"">
+              footnotemark:
+            </span>
+            <span class=""ltx_tag ltx_tag_note"">
+              1
+            </span>
+          </span>
+        </span>
+      </span>
+      ,  Junxue Wang
+      <sup class=""ltx_sup"">
+        1
+      </sup>
+      ,  Shengqian Chen
+      <sup class=""ltx_sup"">
+        1
+      </sup>
+      ,  Xiang Wei
+      <sup class=""ltx_sup"">
+        1
+      </sup>
+      ,  Qiang Yu
+      <sup class=""ltx_sup"">
+        1,2
+      </sup>
+      <br class=""ltx_break""/>
+      <sup class=""ltx_sup"">
+        1
+      </sup>
+      College of Intelligence and Computing, Tianjin University, Tianjin, China
+      <br class=""ltx_break""/>
+      <sup class=""ltx_sup"">
+        2
+      </sup>
+      College of Computer and Information Engineering, Tianjin Normal University, Tianjin, China
+      <br class=""ltx_break""/>
+      <span class=""ltx_text ltx_font_typewriter"">
+        yuqiang@tju.edu.cn
+      </span>
+    </span>
+    <span class=""ltx_author_notes"">
+      Equal contribution.Corresponding author.
+    </span>
+  </span>
+</div>
+","<span class=""ltx_personname"">
+  Zhichao Deng
+  <sup class=""ltx_sup"">
+    1
+  </sup>
+  ,  Zhikun Liu
+  <sup class=""ltx_sup"">
+    1
+  </sup>
+  <span class=""ltx_note ltx_role_footnotemark"" id=""footnotex1"">
+    <sup class=""ltx_note_mark"">
+      1
+    </sup>
+    <span class=""ltx_note_outer"">
+      <span class=""ltx_note_content"">
+        <sup class=""ltx_note_mark"">
+          1
+        </sup>
+        <span class=""ltx_note_type"">
+          footnotemark:
+        </span>
+        <span class=""ltx_tag ltx_tag_note"">
+          1
+        </span>
+      </span>
+    </span>
+  </span>
+  ,  Junxue Wang
+  <sup class=""ltx_sup"">
+    1
+  </sup>
+  ,  Shengqian Chen
+  <sup class=""ltx_sup"">
+    1
+  </sup>
+  ,  Xiang Wei
+  <sup class=""ltx_sup"">
+    1
+  </sup>
+  ,  Qiang Yu
+  <sup class=""ltx_sup"">
+    1,2
+  </sup>
+  <br class=""ltx_break""/>
+  <sup class=""ltx_sup"">
+    1
+  </sup>
+  College of Intelligence and Computing, Tianjin University, Tianjin, China
+  <br class=""ltx_break""/>
+  <sup class=""ltx_sup"">
+    2
+  </sup>
+  College of Computer and Information Engineering, Tianjin Normal University, Tianjin, China
+  <br class=""ltx_break""/>
+  <span class=""ltx_text ltx_font_typewriter"">
+    yuqiang@tju.edu.cn
+  </span>
+</span>
+<span class=""ltx_author_notes"">
+  Equal contribution.Corresponding author.
+</span>",
 2,2025-08-24 13:28:39,https://arxiv.org/abs/2508.10918,https://arxiv.org/html/2508.10918,Privacy Enhancement for Gaze Data Using a Noise-Infused Autoencoder,Samantha Aziz; Oleg Komogortsev,"1 August, 2025",August 2025,cs.CV; cs.HC,"
 
 
@@ -36,4 +204,77 @@ San Marcos, Texas, USA
 ok@txstate.edu
 
 
-"
+","<div class=""ltx_authors"">
+  <span class=""ltx_creator ltx_role_author"">
+    <span class=""ltx_personname"">
+      <a class=""ltx_ref ltx_href"" href=""https://orcid.org/0000-0002-7656-2662"" title="""">
+        <img alt=""[Uncaptioned image]"" class=""ltx_graphics ltx_img_square"" height=""8"" id=""g1"" src=""x1.png"" width=""8""/>
+        Samantha Aziz
+      </a>
+      <br class=""ltx_break""/>
+      Department of Computer Science
+      <br class=""ltx_break""/>
+      Texas State University
+      <br class=""ltx_break""/>
+      San Marcos, Texas, USA
+      <br class=""ltx_break""/>
+      <span class=""ltx_text ltx_font_typewriter"">
+        sda69@txstate.edu
+      </span>
+      <br class=""ltx_break""/>
+      <span class=""ltx_ERROR undefined"">
+        \And
+      </span>
+      <a class=""ltx_ref ltx_href"" href=""https://orcid.org/0000-0001-7890-8842"" title="""">
+        <img alt=""[Uncaptioned image]"" class=""ltx_graphics ltx_img_square"" height=""8"" id=""g2"" src=""x2.png"" width=""8""/>
+        Oleg Komogortsev
+      </a>
+      <br class=""ltx_break""/>
+      Department of Computer Science
+      <br class=""ltx_break""/>
+      Texas State University
+      <br class=""ltx_break""/>
+      San Marcos, Texas, USA
+      <br class=""ltx_break""/>
+      <span class=""ltx_text ltx_font_typewriter"">
+        ok@txstate.edu
+      </span>
+      <br class=""ltx_break""/>
+    </span>
+  </span>
+</div>
+","<span class=""ltx_personname"">
+  <a class=""ltx_ref ltx_href"" href=""https://orcid.org/0000-0002-7656-2662"" title="""">
+    <img alt=""[Uncaptioned image]"" class=""ltx_graphics ltx_img_square"" height=""8"" id=""g1"" src=""x1.png"" width=""8""/>
+    Samantha Aziz
+  </a>
+  <br class=""ltx_break""/>
+  Department of Computer Science
+  <br class=""ltx_break""/>
+  Texas State University
+  <br class=""ltx_break""/>
+  San Marcos, Texas, USA
+  <br class=""ltx_break""/>
+  <span class=""ltx_text ltx_font_typewriter"">
+    sda69@txstate.edu
+  </span>
+  <br class=""ltx_break""/>
+  <span class=""ltx_ERROR undefined"">
+    \And
+  </span>
+  <a class=""ltx_ref ltx_href"" href=""https://orcid.org/0000-0001-7890-8842"" title="""">
+    <img alt=""[Uncaptioned image]"" class=""ltx_graphics ltx_img_square"" height=""8"" id=""g2"" src=""x2.png"" width=""8""/>
+    Oleg Komogortsev
+  </a>
+  <br class=""ltx_break""/>
+  Department of Computer Science
+  <br class=""ltx_break""/>
+  Texas State University
+  <br class=""ltx_break""/>
+  San Marcos, Texas, USA
+  <br class=""ltx_break""/>
+  <span class=""ltx_text ltx_font_typewriter"">
+    ok@txstate.edu
+  </span>
+  <br class=""ltx_break""/>
+</span>",
