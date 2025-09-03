@@ -4,7 +4,10 @@
       "Bash(python:*)",
       "WebFetch(domain:arxiv.org)",
       "Bash(rm:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(pip install:*)",
+      "Bash(git add:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,8 +1,0 @@
-│ > @Example_files\1_URLs of Paper Abstract Page.html 를 보면 Submission history와    │
-│   함께, Paper의 veresion이 v1, v2와 같은 형식으로 있고, 해당 version이 제출된 날짜  │
-│   가 적혀있어. @1_URLs of Paper Abstract Page.py 에서 수집하는 항목에 version과     │
-│   해당 version이 제출된 날짜를 추가로 수집해야돼.                                   │
-│                                                                                     │
-│   저장하는 csv에 아래와 같은 column이 추가되도록 해줘.                              │
-│   1. Submission_history: {"v1":"v1 버전 제출 날짜", "v2":"v2 버전 제출 날짜"}       │
-│   2. Latest_veresion: "vn"
