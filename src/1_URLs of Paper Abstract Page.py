@@ -11,45 +11,6 @@ from typing import List, Dict, Any, Optional, Tuple
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 PAR_DIR = os.path.dirname(CUR_DIR)
 
-def convert_submitted_to_date(submitted_str: str) -> Optional[str]:
-    """
-    Convert submitted date string to YYYY-MM-DD format
-    
-    Converts various arXiv submission date formats to standard YYYY-MM-DD format.
-    
-    Input:
-        - submitted_str: str - Original submitted date string from arXiv
-            - Ex: '8 Jan 2024', '15 May 2025', '2 Dec 2024'
-    
-    Output:
-        - date_str: Optional[str] - Date in YYYY-MM-DD format or None if parsing fails
-            - Ex: '2024-01-08', '2025-05-15', '2024-12-02'
-    
-    Example:
-        >>> convert_submitted_to_date('8 Jan 2024')
-        '2024-01-08'
-        >>> convert_submitted_to_date('15 May 2025')
-        '2025-05-15'
-        >>> convert_submitted_to_date('invalid date')
-        None
-    """
-    if not submitted_str or submitted_str.strip() == '':
-        return None
-    
-    try:
-        # Parse common arXiv date formats
-        # Format: "8 Jan 2024" or "15 May 2025"
-        date_obj = datetime.strptime(submitted_str.strip(), '%d %b %Y')
-        return date_obj.strftime('%Y-%m-%d')
-    except ValueError:
-        try:
-            # Try alternative format if first fails
-            # Format: "Jan 8 2024" or "May 15 2025"
-            date_obj = datetime.strptime(submitted_str.strip(), '%b %d %Y')
-            return date_obj.strftime('%Y-%m-%d')
-        except ValueError:
-            print(f"Warning: Could not parse submitted date: {submitted_str}")
-            return None
 
 def create_directories() -> None:
     """
@@ -615,12 +576,11 @@ def save_results(papers_data: List[Dict[str, str]], start_date: datetime, end_da
         paper_id = generate_paper_id(current_date, sequence_num)
         paper_ids.append(paper_id)
         
-        # Add to ID table (convert Submitted to YYYY-MM-DD format)
-        submitted_date = convert_submitted_to_date(paper['Submitted'])
+        # Add to ID table (use original submitted date format)
         new_row = pd.DataFrame({
             'ID': [paper_id],
             'Paper_Title': [paper['Title']],
-            'Submitted': [submitted_date if submitted_date else paper['Submitted']]
+            'Submitted': [paper['Submitted']]
         })
         id_table_df = pd.concat([id_table_df, new_row], ignore_index=True)
     
