@@ -740,78 +740,35 @@ def main() -> None:
     print(f"프로그램 실행 시각 (한국 시간): {korea_now.strftime('%Y-%m-%d %H:%M:%S KST')}")
     print(f"프로그램 실행 시각 (미국 뉴욕 시간): {us_now.strftime('%Y-%m-%d %H:%M:%S EST/EDT')}")
     
-    # Calculate search date range based on ID_TABLE.csv
-    # Find the latest submitted date from existing papers and search from next day
+    # Calculate search date range - search backwards from yesterday until papers found
+    # Always search day by day, maximum 2 weeks back
     us_today = us_now.date()
     us_yesterday = us_today - timedelta(days=1)  # arXiv doesn't publish today's papers
     
-    # Load existing ID table to find latest submitted date
-    id_table_df = load_or_create_id_table()
-    
-    if not id_table_df.empty and 'Submitted' in id_table_df.columns:
-        # Find the latest submitted date
-        valid_dates = []
-        for submitted in id_table_df['Submitted']:
-            if pd.notna(submitted) and submitted != '':
-                try:
-                    # Try parsing YYYY-MM-DD format first
-                    if '-' in str(submitted):
-                        date_obj = datetime.strptime(str(submitted), '%Y-%m-%d').date()
-                    else:
-                        # Try parsing original format
-                        date_obj = datetime.strptime(str(submitted), '%d %b %Y').date()
-                    valid_dates.append(date_obj)
-                except ValueError:
-                    continue
+    print("어제부터 역순으로 논문을 찾습니다. (최대 2주)")
+    # Try to find papers starting from yesterday, going back up to 14 days
+    found_papers = False
+    for days_back in range(1, 15):  # 1일전(어제) ~ 14일전 (2주)
+        test_date = us_today - timedelta(days=days_back)
+        test_start = datetime.combine(test_date, datetime.min.time())
+        test_end = datetime.combine(test_date + timedelta(days=1), datetime.min.time())
         
-        if valid_dates:
-            latest_submitted_date = max(valid_dates)
-            # Start from the day after latest submitted date
-            start_target_date = latest_submitted_date + timedelta(days=1)
-            
-            # Apply maximum 7 days limit
-            max_start_date = us_yesterday - timedelta(days=6)  # 7 days back from yesterday
-            if start_target_date < max_start_date:
-                start_target_date = max_start_date
-                print(f"최신 논문 날짜가 7일을 초과하여, 최대 7일 범위로 제한: {start_target_date}")
-            
-            end_target_date = us_yesterday  # End at yesterday (today's papers don't appear)
-            
-            if start_target_date <= end_target_date:
-                days_range = (end_target_date - start_target_date).days + 1
-                print(f"ID_TABLE.csv 최신 날짜({latest_submitted_date}) 다음날부터 어제까지 수집: {start_target_date} ~ {end_target_date} ({days_range}일간)")
-            else:
-                print(f"수집할 새로운 논문이 없습니다. (최신: {latest_submitted_date}, 어제: {us_yesterday})")
-                return
+        print(f"{days_back}일 전({test_date}) 논문 확인 중...")
+        test_papers = fetch_arxiv_data(['cs.AI', 'cs.LG'], test_start, test_end)
+        
+        if test_papers and len(test_papers) > 0:
+            print(f"{days_back}일 전({test_date})에 {len(test_papers)}개 논문 발견!")
+            start_target_date = test_date
+            end_target_date = test_date
+            found_papers = True
+            break
         else:
-            print("ID_TABLE.csv에서 유효한 날짜를 찾을 수 없습니다. 어제 논문을 수집합니다.")
-            start_target_date = us_yesterday
-            end_target_date = us_yesterday
-    else:
-        print("ID_TABLE.csv가 비어있습니다. 어제부터 역순으로 논문을 찾습니다.")
-        # Try to find papers starting from yesterday, going back up to 7 days
-        found_papers = False
-        for days_back in range(1, 8):  # 1일전(어제) ~ 7일전
-            test_date = us_today - timedelta(days=days_back)
-            test_start = datetime.combine(test_date, datetime.min.time())
-            test_end = datetime.combine(test_date + timedelta(days=1), datetime.min.time())
-            
-            print(f"{days_back}일 전({test_date}) 논문 확인 중...")
-            test_papers = fetch_arxiv_data(['cs.AI', 'cs.LG'], test_start, test_end)
-            
-            if test_papers and len(test_papers) > 0:
-                print(f"{days_back}일 전({test_date})에 {len(test_papers)}개 논문 발견!")
-                start_target_date = test_date
-                end_target_date = test_date
-                found_papers = True
-                break
-            else:
-                print(f"{days_back}일 전({test_date})에 논문이 없습니다.")
-        
-        if not found_papers:
-            print("최근 7일 동안 논문을 찾을 수 없습니다. 어제 날짜로 검색을 시도합니다.")
-            start_target_date = us_yesterday
-            end_target_date = us_yesterday
+            print(f"{days_back}일 전({test_date})에 논문이 없습니다.")
+    
+    if not found_papers:
+        print("최근 2주 동안 논문을 찾을 수 없습니다. 어제 날짜로 검색을 시도합니다.")
+        start_target_date = us_yesterday
+        end_target_date = us_yesterday
 
     start_date = datetime.combine(start_target_date, datetime.min.time())
     end_date = datetime.combine(end_target_date + timedelta(days=1), datetime.min.time())
