@@ -1,0 +1,35 @@
+# arXiv Paper Collection System Configuration
+
+DISCORD_WEBHOOK = 
+
+GPT_MODEL = 
+
+# Email address to receive notifications
+RECIPIENT_EMAIL=
+
+# OpenAI API Configuration (for organization parsing)
+OPENAI_API_KEY=
+
+# OpenAlex / Semantic Scholar (citation fetching)
+OPENALEX_API_KEY=
+OPENALEX_MAILTO=
+SEMANTIC_SCHOLAR_API_KEY=
+# Optional tuning
+CITATION_SLEEP_SEC=0.1
+CITATION_TITLE_MATCH_THRESHOLD=0.90
+
+# Known Organizations List (JSON array format)
+# Pre-defined list of famous organizations to catch if GPT misses them
+KNOWN_ORGANIZATIONS=["Google"]
+EMAIL_PATTERNS={"google": ["@google.com", ["@", "google", " "], ["@", "google", "\n"]] }
+
+# LLM model names to exclude during organization filtering (JSON array, lowercase)
+LLM_MODEL_BLACKLIST=["gemini"]
+
+# Optional: manual paper date range for Phase 1 (YYYY-MM-DD)
+PAPER_START_DATE=
+PAPER_END_DATE=
+
+# Browser path for Gmail OAuth authentication (WSL2)
+# Default: Chrome. For Brave, use: /mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe
+BROWSER_PATH=/mnt/c/Program Files/Google/Chrome/Application/chrome.exe

@@ -7,8 +7,7 @@ Integrated arXiv Paper Collection and Gmail Notification System
 Description:
     - Runs the complete paper collection pipeline (phases 1-5)
     - Phase 1-4: Paper collection, HTML extraction, organization parsing, data integration
-    - Phase 5: GPT-5-nano abstract summary generation
-    - Phase 6: Gmail notification with filtered results
+    - Phase 5: Gmail notification with filtered results
     - Configurable organizations via .env file
 
 Author: AI Assistant
@@ -18,6 +17,7 @@ Date: 2025-08-25
 import os
 import sys
 import subprocess
+import argparse
 from datetime import datetime
 import dotenv
 
@@ -34,7 +34,7 @@ except Exception as e:
     print(f"WARNING: gmail_sending.py를 불러올 수 없습니다: {e}")
     gmail_sending = None
 
-def run_script(script_name: str, input_data: str = None, show_realtime: bool = False) -> bool:
+def run_script(script_name: str, input_data: str = None, show_realtime: bool = False, timeout: int = 1800) -> bool:
     """Run a Python script and return success status."""
     print(f"\n{'='*60}")
     print(f"Running: {script_name}")
@@ -58,7 +58,7 @@ def run_script(script_name: str, input_data: str = None, show_realtime: bool = F
                 process.communicate(input=input_data)
                 result_code = process.wait()
             else:
-                result_code = subprocess.run([sys.executable, script_name], timeout=1800).returncode
+                result_code = subprocess.run([sys.executable, script_name], timeout=timeout).returncode
             
             end_time = datetime.now()
             execution_time = (end_time - start_time).total_seconds()
@@ -69,8 +69,8 @@ def run_script(script_name: str, input_data: str = None, show_realtime: bool = F
             return result_code == 0
         else:
             # Normal execution with output capture
-            result = subprocess.run([sys.executable, script_name], 
-                                  capture_output=True, text=True, timeout=1800,
+            result = subprocess.run([sys.executable, script_name],
+                                  capture_output=True, text=True, timeout=timeout,
                                   input=input_data)  # Pass input for interactive scripts
             
             end_time = datetime.now()
@@ -103,7 +103,7 @@ def run_script(script_name: str, input_data: str = None, show_realtime: bool = F
                 return False
             
     except subprocess.TimeoutExpired:
-        print(f"ERROR {script_name} timed out after 30 minutes")
+        print(f"ERROR {script_name} timed out after {timeout}s")
         print(f"[LOG] Timeout occurred at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         return False
     except Exception as e:
@@ -119,6 +119,22 @@ def main():
     """메인 함수 - 통합 파이프라인을 실행합니다."""
     print("arXiv 논문 수집 및 알림 통합 시스템 시작")
     print(f"시작 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    parser = argparse.ArgumentParser(description="arXiv 논문 수집 통합 파이프라인 (기간 지정)")
+    parser.add_argument('--PAPER_START_DATE', type=str, default=None, help='수집 시작 날짜 (YYYY-MM-DD)')
+    parser.add_argument('--PAPER_END_DATE', type=str, default=None, help='수집 종료 날짜 (YYYY-MM-DD)')
+    args = parser.parse_args()
+
+    # CLI args take priority, then fall back to env vars
+    period_start = args.PAPER_START_DATE or os.getenv("PAPER_START_DATE", "").strip()
+    period_end = args.PAPER_END_DATE or os.getenv("PAPER_END_DATE", "").strip()
+
+    if period_start and period_end:
+        os.environ["PAPER_START_DATE"] = period_start
+        os.environ["PAPER_END_DATE"] = period_end
+        print(f"[설정] 수동 기간: {period_start} ~ {period_end}")
+    else:
+        print("[설정] 수동 기간 미설정: 기본 최근 논문 수집 로직 사용")
     
     # Step 1: Run Phase 1 - URL Collection
     print(f"\n[PHASE 1] 논문 URL 수집 시작")
@@ -130,8 +146,8 @@ def main():
 
     # # Step 1-aux_1: Add citation counts (OpenAlex -> Semantic Scholar)
     # print(f"\n[PHASE 1-aux_1] 인용 수 추가 시작")
-    # if not run_script("1-aux_1_citation_fetching.py", show_realtime=True):
-    #     print("WARNING Phase 1-aux_1 실패. 인용 수 없이 계속 진행합니다.")
+    # if not run_script("1-aux_1_citation_fetching.py", timeout=300):
+    #     print("WARNING Phase 1-aux_1 실패/타임아웃. 인용 수 없이 계속 진행합니다.")
     
     # Step 2: Run Phase 2 - HTML Raw Text Extraction
     print(f"\n[PHASE 2] HTML 텍스트 추출 시작")
@@ -165,25 +181,20 @@ def main():
         print("ERROR Phase 4 실패. 파이프라인을 중단합니다.")
         return
 
-    # Step 5: Run Phase 5 - GPT-5-nano Abstract Summary
-    print(f"\nPhase 5: GPT-5-nano 논문 요약 생성")
-    if not run_script("5_abs_summary.py"):
-        print("WARNING Phase 5 실패. 요약 없이 계속 진행합니다.")
-
-    # Step 6: Run Phase 6 - Gmail Notification
-    print(f"\nPhase 6: Gmail 알림 발송")
+    # Step 5: Run Phase 5 - Gmail Notification
+    print(f"\nPhase 5: Gmail 알림 발송")
     if gmail_sending is None:
-        print("ERROR Phase 6 모듈을 불러올 수 없어 Gmail 발송을 건너뜁니다.")
-        print("   - Phase 1-5는 성공적으로 완료되었습니다.")
+        print("ERROR Phase 5 모듈을 불러올 수 없어 Gmail 발송을 건너뜁니다.")
+        print("   - Phase 1-4는 성공적으로 완료되었습니다.")
         return
-
+    
     if not run_script("gmail_sending.py"):
-        print("WARNING Phase 6 실패. 이메일 발송에 문제가 있었습니다.")
-        print("   - Phase 1-5는 성공적으로 완료되었습니다.")
+        print("WARNING Phase 5 실패. 이메일 발송에 문제가 있었습니다.")
+        print("   - Phase 1-4는 성공적으로 완료되었습니다.")
         return
     
     print(f"\n통합 파이프라인 완료!")
-    print(f"   - 모든 Phase (1-6) 성공적으로 실행됨")
+    print(f"   - 모든 Phase (1-5) 성공적으로 실행됨")
     print(f"   - 논문 수집, 처리, 필터링, 이메일 발송 완료")
     print(f"   - 결과는 results/ 폴더에서 확인할 수 있습니다")
 

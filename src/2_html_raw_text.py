@@ -5,12 +5,9 @@ import os
 from datetime import datetime
 import time
 import pickle
-import xml.dom.minidom
 import re
 from typing import Tuple, Optional, Any
-
-CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-PAR_DIR = os.path.dirname(CUR_DIR)
+from pipeline_config import results_dir, backup_dir
 
 def remove_outer_tags_and_check_rule(html_with_tags: str) -> Tuple[str, Optional[str]]:
     """
@@ -179,77 +176,23 @@ def extract_ltx_authors(html_url: str) -> Tuple[str, str]:
 def create_directories() -> None:
     """
     필요한 디렉토리들을 생성합니다.
-    
+
     Creates necessary directories for HTML raw text processing and backup storage.
-    
+
     Input: None
-    
+
     Output: None (creates directories)
-        - backup/2_html_raw_text: Backup directory for HTML processing results
-    
+        - results/{date}/Phase_2: Results directory for HTML processing
+        - backup/{date}/Phase_2: Backup directory for HTML processing results
+
     Example:
         >>> create_directories()
         디렉토리 생성 완료
     """
-    os.makedirs(f"{PAR_DIR}/backup/2_html_raw_text", exist_ok=True)
+    results_dir('Phase_2')
+    backup_dir('Phase_2')
     print("디렉토리 생성 완료")
 
-def save_existing_data_to_backup(start_date_str: str, end_date_str: str) -> bool:
-    """
-    기존 데이터를 백업으로 저장한 후 삭제합니다.
-    
-    Backs up existing HTML raw text results before processing new data.
-    
-    Input:
-        - start_date_str: str - Start date in YYMMDD format
-            - Ex: '250508'
-        - end_date_str: str - End date in YYMMDD format
-            - Ex: '250509'
-    
-    Output:
-        - backup_created: bool - True if backup was created, False if no existing file
-            - Ex: True
-    
-    Example:
-        >>> backup_created = save_existing_data_to_backup('250508', '250509')
-        기존 데이터 백업 저장: backup/2_html_raw_text/2_html_raw_text_StartDate250508_EndDate250509.csv
-        >>> print(backup_created)
-        True
-    """
-    output_file = f"{PAR_DIR}/results/2_html_raw_text.csv"
-    if os.path.exists(output_file):
-        existing_df = pd.read_csv(output_file)
-        backup_path = f"{PAR_DIR}/backup/2_html_raw_text/2_html_raw_text_StartDate{start_date_str}_EndDate{end_date_str}.csv"
-        existing_df.to_csv(backup_path, index=False, encoding='utf-8-sig')
-        print(f"기존 데이터 백업 저장: {backup_path}")
-        return True
-    return False
-
-def save_backup_file(df: pd.DataFrame, start_date_str: str, end_date_str: str) -> None:
-    """
-    현재 결과를 백업으로 저장합니다.
-    
-    Saves current processing results as backup file with date range in filename.
-    
-    Input:
-        - df: pd.DataFrame - DataFrame containing processed HTML data
-            - Ex: DataFrame with columns ['ID', 'Title', 'html_raw_text', 'html_raw_text_with_tags', ...]
-        - start_date_str: str - Start date in YYMMDD format
-            - Ex: '250508'
-        - end_date_str: str - End date in YYMMDD format
-            - Ex: '250509'
-    
-    Output: None (saves backup file)
-        - backup/2_html_raw_text/2_html_raw_text_StartDateYYMMDD_EndDateYYMMDD.csv
-    
-    Example:
-        >>> df = pd.DataFrame({'ID': ['250508_1'], 'Title': ['Test Paper'], 'html_raw_text': ['Content']})
-        >>> save_backup_file(df, '250508', '250509')
-        백업 파일 저장 완료: backup/2_html_raw_text/2_html_raw_text_StartDate250508_EndDate250509.csv
-    """
-    backup_path = f"{PAR_DIR}/backup/2_html_raw_text/2_html_raw_text_StartDate{start_date_str}_EndDate{end_date_str}.csv"
-    df.to_csv(backup_path, index=False, encoding='utf-8-sig')
-    print(f"백업 파일 저장 완료: {backup_path}")
 
 def save_additional_formats(df: pd.DataFrame, start_date_str: str, end_date_str: str) -> None:
     """
@@ -280,18 +223,18 @@ def save_additional_formats(df: pd.DataFrame, start_date_str: str, end_date_str:
     try:
         # html_raw_text pickle 저장
         html_raw_text_data = df['html_raw_text'].tolist()
-        pickle_path = f"{PAR_DIR}/results/html_raw_text.p"
-        backup_pickle_path = f"{PAR_DIR}/backup/2_html_raw_text/html_raw_text_StartDate{start_date_str}_EndDate{end_date_str}.p"
-        
+        pickle_path = os.path.join(results_dir('Phase_2'), 'html_raw_text.p')
+        backup_pickle_path = os.path.join(backup_dir('Phase_2'), f'html_raw_text_StartDate{start_date_str}_EndDate{end_date_str}.p')
+
         with open(pickle_path, 'wb') as f:
             pickle.dump(html_raw_text_data, f)
         with open(backup_pickle_path, 'wb') as f:
             pickle.dump(html_raw_text_data, f)
         print(f"Pickle 파일 저장: {pickle_path} (백업: {backup_pickle_path})")
-        
+
         # html_raw_text txt 저장
-        txt_path = f"{PAR_DIR}/results/html_raw_text.txt"
-        backup_txt_path = f"{PAR_DIR}/backup/2_html_raw_text/html_raw_text_StartDate{start_date_str}_EndDate{end_date_str}.txt"
+        txt_path = os.path.join(results_dir('Phase_2'), 'html_raw_text.txt')
+        backup_txt_path = os.path.join(backup_dir('Phase_2'), f'html_raw_text_StartDate{start_date_str}_EndDate{end_date_str}.txt')
         
         for path in [txt_path, backup_txt_path]:
             with open(path, 'w', encoding='utf-8') as f:
@@ -335,17 +278,17 @@ def save_with_tags_formats(df: pd.DataFrame, start_date_str: str, end_date_str: 
     try:
         # Pickle format
         html_raw_text_with_tags_data = df['html_raw_text_with_tags'].tolist()
-        pickle_path = f"{PAR_DIR}/results/html_raw_text_with_tags.p"
-        backup_pickle_path = f"{PAR_DIR}/backup/2_html_raw_text/html_raw_text_with_tags_StartDate{start_date_str}_EndDate{end_date_str}.p"
-        
+        pickle_path = os.path.join(results_dir('Phase_2'), 'html_raw_text_with_tags.p')
+        backup_pickle_path = os.path.join(backup_dir('Phase_2'), f'html_raw_text_with_tags_StartDate{start_date_str}_EndDate{end_date_str}.p')
+
         for path in [pickle_path, backup_pickle_path]:
             with open(path, 'wb') as f:
                 pickle.dump(html_raw_text_with_tags_data, f)
         print(f"태그 포함 Pickle 저장: {pickle_path} (백업: {backup_pickle_path})")
-        
+
         # TXT format
-        txt_path = f"{PAR_DIR}/results/html_raw_text_with_tags.txt"
-        backup_txt_path = f"{PAR_DIR}/backup/2_html_raw_text/html_raw_text_with_tags_StartDate{start_date_str}_EndDate{end_date_str}.txt"
+        txt_path = os.path.join(results_dir('Phase_2'), 'html_raw_text_with_tags.txt')
+        backup_txt_path = os.path.join(backup_dir('Phase_2'), f'html_raw_text_with_tags_StartDate{start_date_str}_EndDate{end_date_str}.txt')
         
         for path in [txt_path, backup_txt_path]:
             with open(path, 'w', encoding='utf-8') as f:
@@ -385,17 +328,17 @@ def save_filtered_formats(df: pd.DataFrame, start_date_str: str, end_date_str: s
     try:
         # Pickle format
         html_raw_text_filtered_data = df['html_raw_text_with_tags_filtered'].tolist()
-        pickle_path = f"{PAR_DIR}/results/html_raw_text_with_tags_filtered.p"
-        backup_pickle_path = f"{PAR_DIR}/backup/2_html_raw_text/html_raw_text_with_tags_filtered_StartDate{start_date_str}_EndDate{end_date_str}.p"
-        
+        pickle_path = os.path.join(results_dir('Phase_2'), 'html_raw_text_with_tags_filtered.p')
+        backup_pickle_path = os.path.join(backup_dir('Phase_2'), f'html_raw_text_with_tags_filtered_StartDate{start_date_str}_EndDate{end_date_str}.p')
+
         for path in [pickle_path, backup_pickle_path]:
             with open(path, 'wb') as f:
                 pickle.dump(html_raw_text_filtered_data, f)
         print(f"필터링된 태그 Pickle 저장: {pickle_path} (백업: {backup_pickle_path})")
-        
+
         # TXT format
-        txt_path = f"{PAR_DIR}/results/html_raw_text_with_tags_filtered.txt"
-        backup_txt_path = f"{PAR_DIR}/backup/2_html_raw_text/html_raw_text_with_tags_filtered_StartDate{start_date_str}_EndDate{end_date_str}.txt"
+        txt_path = os.path.join(results_dir('Phase_2'), 'html_raw_text_with_tags_filtered.txt')
+        backup_txt_path = os.path.join(backup_dir('Phase_2'), f'html_raw_text_with_tags_filtered_StartDate{start_date_str}_EndDate{end_date_str}.txt')
         
         for path in [txt_path, backup_txt_path]:
             with open(path, 'w', encoding='utf-8') as f:
@@ -438,15 +381,15 @@ def save_intermediate_results(df: pd.DataFrame, output_file: str, processed_coun
         print(f"OK 중간 저장 완료 ({processed_count}개 논문 처리됨): {output_file}")
         
         # 처리 중 파일도 추가로 저장 (파일이 열려있어도 접근 가능하도록)
-        processing_file = f"{PAR_DIR}/results/2_html_raw_text_processing.csv"
+        processing_file = os.path.join(results_dir('Phase_2'), '2_html_raw_text_processing.csv')
         df.to_csv(processing_file, index=False, encoding='utf-8-sig')
         print(f"OK 처리 중 파일 저장 완료: {processing_file}")
-        
+
     except Exception as e:
         print(f"ERROR 중간 저장 실패: {str(e)}")
         # 메인 파일 저장이 실패해도 processing 파일 저장 시도
         try:
-            processing_file = f"{PAR_DIR}/results/2_html_raw_text_processing.csv"
+            processing_file = os.path.join(results_dir('Phase_2'), '2_html_raw_text_processing.csv')
             df.to_csv(processing_file, index=False, encoding='utf-8-sig')
             print(f"OK 처리 중 파일은 저장 성공: {processing_file}")
         except Exception as e2:
@@ -542,12 +485,12 @@ def save_failed_papers(df: pd.DataFrame, start_date_str: str, end_date_str: str)
         
         if len(failed_df) > 0:
             # 실패한 논문들을 메인 결과 파일과 동일한 형태로 저장
-            failed_output_file = f"{PAR_DIR}/results/2_2_failed_papers.csv"
+            failed_output_file = os.path.join(results_dir('Phase_2'), '2_2_failed_papers.csv')
             failed_df.to_csv(failed_output_file, index=False, encoding='utf-8-sig')
             print(f"실패한 논문 {len(failed_df)}개를 별도 파일로 저장: {failed_output_file}")
-            
+
             # 백업도 생성
-            backup_failed_path = f"{PAR_DIR}/backup/2_html_raw_text/2_2_failed_papers_StartDate{start_date_str}_EndDate{end_date_str}.csv"
+            backup_failed_path = os.path.join(backup_dir('Phase_2'), f'2_2_failed_papers_StartDate{start_date_str}_EndDate{end_date_str}.csv')
             failed_df.to_csv(backup_failed_path, index=False, encoding='utf-8-sig')
             print(f"실패한 논문 백업 저장: {backup_failed_path}")
             
@@ -604,8 +547,8 @@ def main() -> None:
     create_directories()
     
     # CSV 파일 읽기
-    input_file = f"{PAR_DIR}/results/1_URL_of_paper_abstractions.csv"
-    output_file = f"{PAR_DIR}/results/2_html_raw_text.csv"
+    input_file = os.path.join(results_dir('Phase_1'), '1_URL_of_paper_abstractions.csv')
+    output_file = os.path.join(results_dir('Phase_2'), '2_html_raw_text.csv')
     
     try:
         df = pd.read_csv(input_file)
@@ -622,12 +565,7 @@ def main() -> None:
             current_date = datetime.now().strftime('%y%m%d')
             start_date = current_date
             end_date = current_date
-            
-        print(f"논문 날짜 범위: {start_date} ~ {end_date}")
-        
-        # 기존 데이터 백업
-        save_existing_data_to_backup(start_date, end_date)
-        
+
         # 필요한 컬럼들 초기화
         df['html_raw_text'] = ""
         df['html_raw_text_with_tags'] = ""
@@ -693,12 +631,17 @@ def main() -> None:
         print(f"{'='*60}")
         df = clean_dataframe(df)
         
-        # 메인 결과 파일 저장 (덮어쓰기)
+        # results와 backup에 동시 저장
+        # 백업 경로 정의
+        backup_path = os.path.join(backup_dir('Phase_2'), f'2_html_raw_text_StartDate{start_date}_EndDate{end_date}.csv')
+
+        # results 폴더에 저장
         df.to_csv(output_file, index=False, encoding='utf-8-sig')
         print(f"메인 결과 파일 저장 완료: {output_file}")
-        
-        # 백업 파일 저장
-        save_backup_file(df, start_date, end_date)
+
+        # backup 폴더에 동일한 파일 저장
+        df.to_csv(backup_path, index=False, encoding='utf-8-sig')
+        print(f"백업 파일 저장 완료: {backup_path}")
         
         # 추가 형식으로 저장 (pickle, txt 등 - 모두 백업 포함)
         save_additional_formats(df, start_date, end_date)

@@ -3,6 +3,13 @@
 # Results folder - Data files change frequently
 results/
 backup/
+txt/
+
+# Docs folder
+Docs/
+
+# Example files
+Example_files/
 
 # Environment and credentials
 .env
@@ -15,6 +22,9 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+
+# Claude Code files
+.claude/
 
 # Virtual environment
 venv/

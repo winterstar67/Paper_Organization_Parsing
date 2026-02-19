@@ -3,35 +3,12 @@ import re
 import json
 from datetime import datetime
 import os
-import openai
-from typing import List, Dict, Tuple, Optional, Any
+from typing import List, Tuple, Optional
 import dotenv
 from bs4 import BeautifulSoup
+from pipeline_config import results_dir
 
 dotenv.load_dotenv()
-
-GPT_MODEL = os.getenv('GPT_MODEL')
-CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-PAR_DIR = os.path.dirname(CUR_DIR)
-
-def create_directories() -> None:
-    """
-    필요한 디렉토리들을 생성합니다.
-    
-    Creates necessary directories for metadata parsing and backup storage.
-    
-    Input: None
-    
-    Output: None (creates directories)
-        - backup/3_parsing_meta_data: Backup directory for parsing results
-    
-    Example:
-        >>> create_directories()
-        디렉토리 생성 완료
-    """
-    os.makedirs("backup/3_parsing_meta_data", exist_ok=True)
-    print("디렉토리 생성 완료")
-
 
 def clean_html_for_gpt(html_content: str) -> str:
     """
@@ -97,215 +74,7 @@ def clean_html_for_gpt(html_content: str) -> str:
         print(f"Error cleaning HTML: {str(e)}")
         return html_content
 
-def extract_organizations_with_gpt(cleaned_html: str, paper_id: int) -> Tuple[List[str], Dict[str, int]]:
-    """
-    정리된 HTML을 ChatGPT에게 전달하여 기관 정보를 추출합니다.
-    
-    Uses ChatGPT API to extract organization names from cleaned HTML content.
-    
-    Input:
-        - cleaned_html: str - Cleaned HTML content from ltx_authors section
-            - Ex: '<span class="ltx_text">John Doe</span><span class="ltx_text">Stanford University</span>'
-        - paper_id: int - Paper identifier for logging
-            - Ex: 5
-    
-    Output:
-        - organizations_list: List[str] - List of extracted organization names
-            - Ex: ['Stanford University', 'Google Research']
-        - token_usage_dict: Dict[str, int] - API token usage statistics
-            - Ex: {'input_tokens': 150, 'output_tokens': 25}
-    
-    Example:
-        >>> html = '<span>John Doe</span><span>MIT</span><span>jane.smith@stanford.edu</span>'
-        >>> orgs, tokens = extract_organizations_with_gpt(html, 1)
-        Paper 1 - Token usage: 120 input, 15 output
-        Paper 1 - GPT response: ["MIT", "Stanford University"]
-        >>> print(orgs)
-        ['MIT', 'Stanford University']
-        >>> print(tokens)
-        {'input_tokens': 120, 'output_tokens': 15}
-    """
-    global GPT_MODEL
 
-    if cleaned_html in ['NO_HTML', 'NO_ltx_authors']:
-        return [], {'input_tokens': 0, 'output_tokens': 0}
-    
-    try:
-        # OpenAI API 클라이언트 설정 (환경변수에서 API 키 읽기)
-        client = openai.OpenAI()
-        
-        prompt = f"""Extract all organizations, institutions, universities, research institutes, and companies from the following HTML content from an academic paper's author section.
-
-HTML Content:
-{cleaned_html}
-
-Requirements:
-1. Extract ONLY the names of organizations/institutions/universities/companies
-2. Do NOT include author names, email addresses, cities, or countries
-3. Remove any duplicates
-4. Return as a simple list format: ["Organization1", "Organization2", ...]
-5. If no organizations are found, return an empty list: []
-6. Focus on extracting: Universities, Colleges, Research Institutes, Companies, Laboratories, Centers
-
-Examples of what TO extract:
-- "Carnegie Mellon University"
-- "Google"
-- "MIT"
-- "Microsoft Research"
-- "Stanford University"
-
-Examples of what NOT to extract:
-- Author names like "John Smith"
-- Email addresses
-- City names like "Pittsburgh"
-- Country names like "USA"
-
-Return only the JSON list, no additional text."""
-
-        response = client.chat.completions.create(
-            model=GPT_MODEL,
-            messages=[
-                {"role": "system", "content": "You are an expert at extracting organization names from academic paper author sections. Return only valid JSON."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        
-        # 토큰 사용량 추출
-        token_usage = {
-            'input_tokens': response.usage.prompt_tokens,
-            'output_tokens': response.usage.completion_tokens
-        }
-        print(f"Paper {paper_id} - Token usage: {token_usage['input_tokens']} input, {token_usage['output_tokens']} output")
-        
-        # 응답에서 조직 리스트 추출
-        content = response.choices[0].message.content.strip()
-        print(f"Paper {paper_id} - GPT response: {content}")
-        
-        try:
-            # JSON 파싱 시도
-            organizations = json.loads(content)
-            if isinstance(organizations, list):
-                # 중복 제거 및 정리
-                unique_orgs = []
-                for org in organizations:
-                    if isinstance(org, str) and org.strip() and org not in unique_orgs:
-                        unique_orgs.append(org.strip())
-                return unique_orgs, token_usage
-            else:
-                print(f"Paper {paper_id} - GPT response is not a list")
-                return [], token_usage
-        except json.JSONDecodeError:
-            print(f"Paper {paper_id} - Failed to parse GPT response as JSON")
-            return [], token_usage
-            
-    except Exception as e:
-        print(f"Paper {paper_id} - Error with GPT API: {str(e)}")
-        return [], {'input_tokens': 0, 'output_tokens': 0}
-
-def save_existing_data_to_backup(start_date_str: str, end_date_str: str) -> bool:
-    """
-    기존 데이터를 백업으로 저장한 후 삭제합니다.
-    
-    Backs up existing parsing metadata results before processing new data.
-    
-    Input:
-        - start_date_str: str - Start date in YYMMDD format
-            - Ex: '250508'
-        - end_date_str: str - End date in YYMMDD format
-            - Ex: '250509'
-    
-    Output:
-        - backup_created: bool - True if backup was created, False if no existing file
-            - Ex: True
-    
-    Example:
-        >>> backup_created = save_existing_data_to_backup('250508', '250509')
-        기존 데이터 백업 저장: backup/3_parsing_meta_data/3_parsing_meta_data_StartDate250508_EndDate250509.csv
-        >>> print(backup_created)
-        True
-    """
-    output_file = f"{PAR_DIR}/results/3_parsing_meta_data.csv"
-    if os.path.exists(output_file):
-        existing_df = pd.read_csv(output_file)
-        backup_path = f"{PAR_DIR}/backup/3_parsing_meta_data/3_parsing_meta_data_StartDate{start_date_str}_EndDate{end_date_str}.csv"
-        existing_df.to_csv(backup_path, index=False, encoding='utf-8-sig')
-        print(f"기존 데이터 백업 저장: {backup_path}")
-        return True
-    return False
-
-def save_backup_file(df: pd.DataFrame, start_date_str: str, end_date_str: str) -> None:
-    """
-    현재 결과를 백업으로 저장합니다.
-    
-    Saves current metadata parsing results as backup file with date range in filename.
-    
-    Input:
-        - df: pd.DataFrame - DataFrame containing parsed metadata with organization information
-            - Ex: DataFrame with columns ['ID', 'Title', 'organization', 'input_tokens', 'output_tokens']
-        - start_date_str: str - Start date in YYMMDD format
-            - Ex: '250508'
-        - end_date_str: str - End date in YYMMDD format
-            - Ex: '250509'
-    
-    Output: None (saves backup file)
-        - backup/3_parsing_meta_data/3_parsing_meta_data_StartDateYYMMDD_EndDateYYMMDD.csv
-    
-    Example:
-        >>> df = pd.DataFrame({'ID': ['250508_1'], 'Title': ['Test Paper'], 'organization': ['["MIT"]']})
-        >>> save_backup_file(df, '250508', '250509')
-        백업 파일 저장 완료: backup/3_parsing_meta_data/3_parsing_meta_data_StartDate250508_EndDate250509.csv
-    """
-    backup_path = f"{PAR_DIR}/backup/3_parsing_meta_data/3_parsing_meta_data_StartDate{start_date_str}_EndDate{end_date_str}.csv"
-    df.to_csv(backup_path, index=False, encoding='utf-8-sig')
-    print(f"백업 파일 저장 완료: {backup_path}")
-
-def save_intermediate_results(df: pd.DataFrame, output_file: str, processed_count: int) -> None:
-    """
-    중간 결과를 저장합니다.
-    
-    Saves intermediate metadata parsing results every 10 papers for recovery purposes.
-    
-    Input:
-        - df: pd.DataFrame - Current state of DataFrame with processed metadata
-            - Ex: DataFrame with partially processed organization data
-        - output_file: str - Path to main output file
-            - Ex: 'results/3_parsing_meta_data.csv'
-        - processed_count: int - Number of papers processed so far
-            - Ex: 20
-    
-    Output: None (saves files)
-        - Main output file (overwritten with cleaned data)
-        - Processing file for backup access
-    
-    Example:
-        >>> df = pd.DataFrame({'ID': ['250508_1'], 'organization': ['["MIT"]'], 'input_tokens': [120]})
-        >>> save_intermediate_results(df, 'results/3_parsing_meta_data.csv', 10)
-        OK 중간 저장 완료 (10개 논문 처리됨): results/3_parsing_meta_data.csv
-        OK 처리 중 파일 저장 완료: results/3_parsing_meta_data_processing.csv
-    """
-    try:
-        # 불필요한 컬럼들 제거한 복사본 생성
-        df_clean = clean_dataframe_for_save(df)
-        
-        # 메인 결과 파일 저장
-        df_clean.to_csv(output_file, index=False, encoding='utf-8-sig')
-        print(f"OK 중간 저장 완료 ({processed_count}개 논문 처리됨): {output_file}")
-        
-        # 처리 중 파일도 추가로 저장 (파일이 열려있어도 접근 가능하도록)
-        processing_file = f"{PAR_DIR}/results/3_parsing_meta_data_processing.csv"
-        df_clean.to_csv(processing_file, index=False, encoding='utf-8-sig')
-        print(f"OK 처리 중 파일 저장 완료: {processing_file}")
-        
-    except Exception as e:
-        print(f"ERROR 중간 저장 실패: {str(e)}")
-        # 메인 파일 저장이 실패해도 processing 파일 저장 시도
-        try:
-            df_clean = clean_dataframe_for_save(df)
-            processing_file = f"{PAR_DIR}/results/3_parsing_meta_data_processing.csv"
-            df_clean.to_csv(processing_file, index=False, encoding='utf-8-sig')
-            print(f"OK 처리 중 파일은 저장 성공: {processing_file}")
-        except Exception as e2:
-            print(f"ERROR 처리 중 파일 저장도 실패: {str(e2)}")
 
 def clean_dataframe_for_save(df: pd.DataFrame, use_ai_mode: Optional[bool] = None) -> pd.DataFrame:
     """
@@ -362,15 +131,103 @@ def clean_dataframe_for_save(df: pd.DataFrame, use_ai_mode: Optional[bool] = Non
     
     return df_clean
 
-def load_known_organizations():
-    """환경변수에서 사전 설정된 기관 목록을 불러옵니다."""
+def load_llm_model_blacklist() -> List[str]:
+    """환경변수에서 제외할 LLM 모델 이름 목록을 불러옵니다."""
     try:
-        known_orgs_str = os.getenv('KNOWN_ORGANIZATIONS', '[]')
-        known_orgs = json.loads(known_orgs_str)
-        return [org.lower() for org in known_orgs] if isinstance(known_orgs, list) else []
-    except json.JSONDecodeError:
-        print("경고: KNOWN_ORGANIZATIONS 환경변수의 JSON 형식이 올바르지 않습니다.")
+        llm_models_raw = os.getenv('LLM_MODEL_BLACKLIST', '[]')
+        llm_models = json.loads(llm_models_raw)
+        if isinstance(llm_models, list):
+            return [model.strip().lower() for model in llm_models if isinstance(model, str) and model.strip()]
         return []
+    except json.JSONDecodeError:
+        print("경고: LLM_MODEL_BLACKLIST 환경변수의 JSON 형식이 올바르지 않습니다.")
+        return []
+
+
+def load_email_patterns() -> dict:
+    """환경변수에서 EMAIL_PATTERNS를 불러옵니다."""
+    try:
+        patterns_str = os.getenv('EMAIL_PATTERNS', '{}')
+        patterns = json.loads(patterns_str)
+        return patterns if isinstance(patterns, dict) else {}
+    except json.JSONDecodeError:
+        print("경고: EMAIL_PATTERNS 환경변수의 JSON 형식이 올바르지 않습니다.")
+        return {}
+
+
+def match_email_pattern(text: str, pattern) -> bool:
+    """
+    단일 이메일 패턴을 텍스트에서 검색합니다 (Pattern 1: tight matching).
+
+    - 문자열 패턴 (예: "@ethz.ch"): 단순 substring 검색
+    - 리스트 패턴 (예: ["@", "eth", " "]): @\\S*keyword\\S* 정규식 사용
+      → "@"와 keyword가 공백 없이 같은 토큰(이메일 도메인) 내에 있을 때만 매칭
+      → "Netherlands" 같이 "@" 없이 나타나는 단어나,
+         "Elizabeth" 같이 "@" 이후 별도 단어로 나타나는 기관명에는 매칭되지 않음
+    """
+    if isinstance(pattern, str):
+        return pattern.lower() in text.lower()
+    elif isinstance(pattern, list) and len(pattern) >= 2:
+        anchor = re.escape(pattern[0])   # "@"
+        keyword = re.escape(pattern[1])  # "eth", "mit" 등
+        regex = anchor + r'\S*' + keyword + r'\S*'
+        return bool(re.search(regex, text, re.IGNORECASE))
+    return False
+
+
+def find_organizations_by_email_patterns(
+    text: str,
+    email_patterns: dict,
+    org_display_names: dict
+) -> List[str]:
+    """
+    Step 1: EMAIL_PATTERNS를 사용하여 이메일 도메인 기반으로 기관을 찾습니다.
+
+    각 기관의 패턴 중 하나라도 매칭되면 해당 기관을 결과에 추가합니다.
+    이메일 주소가 있는 논문에서 정확하게 기관을 식별합니다.
+    """
+    if not text or not email_patterns:
+        return []
+
+    found_orgs = []
+    for org_key, patterns in email_patterns.items():
+        for pattern in patterns:
+            if match_email_pattern(text, pattern):
+                display_name = org_display_names.get(org_key, org_key)
+                if display_name not in found_orgs:
+                    found_orgs.append(display_name)
+                break
+
+    return found_orgs
+
+
+def find_organizations_by_exact_name(
+    text: str,
+    email_patterns: dict,
+    org_display_names: dict
+) -> List[str]:
+    """
+    Step 2 (fallback): 기관명을 단어 경계(word boundary) 기준으로 정확히 매칭합니다.
+
+    이메일 주소 없이 기관명만 기재된 논문을 위한 보조 탐색입니다.
+    EMAIL_PATTERNS의 key 목록을 사용하여 텍스트를 소문자로 변환 후
+    \\b(word boundary)로 정확한 단어 단위 매칭만 허용합니다.
+    예: "eth"는 매칭되지만 "Netherlands", "Elizabeth"는 매칭되지 않음.
+    """
+    if not text or not email_patterns:
+        return []
+
+    text_lower = text.lower()
+    found_orgs = []
+
+    for org_key in email_patterns.keys():
+        pattern = r'\b' + re.escape(org_key.lower()) + r'\b'
+        if re.search(pattern, text_lower):
+            display_name = org_display_names.get(org_key, org_key)
+            if display_name not in found_orgs:
+                found_orgs.append(display_name)
+
+    return found_orgs
 
 def remove_author_names_from_html(html_content: str, authors_text: str) -> str:
     """
@@ -470,65 +327,29 @@ def extract_text_from_html(html_content: str) -> str:
         text_only = re.sub(r'\s+', ' ', text_only)
         return text_only.strip()
 
-def find_known_organizations_in_text(text: str, known_orgs_lower: List[str], original_known_orgs: List[str]) -> List[str]:
-    """
-    텍스트에서 사전 설정된 기관을 찾습니다.
-    
-    Args:
-        text: 검색할 텍스트 (HTML 태그가 제거된 순수 텍스트)
-        known_orgs_lower: 소문자로 변환된 사전 설정 기관 목록
-        original_known_orgs: 원본 사전 설정 기관 목록
-    
-    Returns:
-        찾아낸 기관들의 원본 이름 리스트
-    """
-    if not text:
-        return []
-    
-    text_lower = text.lower()
-    found_orgs = []
-    
-    for i, org_lower in enumerate(known_orgs_lower):
-        if org_lower in text_lower:
-            original_org = original_known_orgs[i]
-            if original_org not in found_orgs:
-                found_orgs.append(original_org)
-    
-    return found_orgs
-
 def main() -> None:
     """
     메인 실행 함수
     
     Main execution function for Phase 3: Paper metadata parsing and organization extraction.
-    Provides user choice between AI mode (GPT + known orgs) and known-only mode.
+    현재는 사전 정의된 기관 목록만 사용하여 결과를 생성합니다.
     
-    Input: None (interactive user input for mode selection)
+    Input: None
     
     Output: None (processes and saves data)
-        - Mode 1 (AI): Uses GPT API + predefined organizations
-            - Saves 3_parsing_meta_data_ai_full.csv (all results)
-            - Saves 3_parsing_meta_data_ai_filtered.csv (known orgs only)
-            - Saves 3_parsing_meta_data.csv (main file)
-        - Mode 2 (Known-only): Uses only predefined organizations
-            - Saves 3_parsing_meta_data.csv (filtered results)
+        - Saves 3_parsing_meta_data.csv (filtered results)
     
     Processing flow:
-        1. User selects processing mode (AI or known-only)
-        2. Load HTML data from Phase 2 results
-        3. Clean HTML and remove author names
-        4. Extract organizations using selected method
-        5. Save results with backups and statistics
+        1. Load HTML data from Phase 2 results
+        2. Clean HTML and remove author names
+        3. Extract organizations by matching predefined names
+        4. Save results with backups and statistics
     
     Example:
         >>> main()
         ============================================================
         Phase 3: 논문 메타데이터 파싱 및 기관 추출
         ============================================================
-        처리 모드를 선택하세요:
-        1. AI 모드 (GPT + 사전 기관): ChatGPT API와 사전 설정 기관 모두 사용
-        2. 사전 기관 전용 모드: 사전 설정 기관 목록만 사용 (API 비용 없음)
-        모드를 선택하세요 (1 또는 2): 1
         ...
         Phase 3 완료!
     """
@@ -536,58 +357,16 @@ def main() -> None:
     print("Phase 3: 논문 메타데이터 파싱 및 기관 추출")
     print("=" * 60)
     
-    # 사용자 모드 선택
-    print("처리 모드를 선택하세요:")
-    print("1. AI 모드 (GPT + 사전 기관): ChatGPT API와 사전 설정 기관 모두 사용")
-    print("2. 사전 기관 전용 모드: 사전 설정 기관 목록만 사용 (API 비용 없음)")
-    
-    while True:
-        try:
-            mode_choice = input("모드를 선택하세요 (1 또는 2): ").strip()
-            if mode_choice in ['1', '2']:
-                break
-            else:
-                print("올바른 선택지를 입력하세요 (1 또는 2)")
-        except KeyboardInterrupt:
-            print("\n프로그램을 종료합니다.")
-            return
-    
-    use_ai_mode = (mode_choice == '1')
-    
-    input_file = f"{PAR_DIR}/results/2_html_raw_text.csv"
-    output_file = f"{PAR_DIR}/results/3_parsing_meta_data.csv"
-    
-    # AI 모드일 때만 OpenAI API 키 확인
-    if use_ai_mode and not os.getenv('OPENAI_API_KEY'):
-        print("WARNING: AI 모드 선택 시 OPENAI_API_KEY 환경변수가 필요합니다.")
-        print("환경변수를 설정하거나 .env 파일에 API 키를 추가해주세요.")
-        print("또는 사전 기관 전용 모드(2)를 선택해주세요.")
-        return
+    input_file = os.path.join(results_dir('Phase_2'), '2_html_raw_text.csv')
+    output_file = os.path.join(results_dir('Phase_3'), '3_parsing_meta_data.csv')
     
     print(f"\n{'='*60}")
-    print(f"선택된 모드: {'AI 모드 (GPT + 사전 기관)' if use_ai_mode else '사전 기관 전용 모드'}")
+    print("선택된 모드: 사전 기관 전용 모드")
     print(f"{'='*60}")
     
     try:
         df = pd.read_csv(input_file)
         print(f"총 {len(df)}개의 논문 데이터를 로드했습니다.")
-        
-        # Extract date range from the data
-        if 'Submitted' in df.columns and len(df) > 0:
-            # Parse submission dates and get min/max
-            submitted_dates = pd.to_datetime(df['Submitted'], errors='coerce')
-            start_date = submitted_dates.min().strftime('%y%m%d')
-            end_date = submitted_dates.max().strftime('%y%m%d')
-        else:
-            # Fallback to current date
-            current_date = datetime.now().strftime('%y%m%d')
-            start_date = current_date
-            end_date = current_date
-            
-        print(f"논문 날짜 범위: {start_date} ~ {end_date}")
-        
-        # 디렉토리 생성 및 기존 데이터 백업
-        save_existing_data_to_backup(start_date, end_date)
         
         # 사전 설정 기관 목록 불러오기
         known_orgs_str = os.getenv('KNOWN_ORGANIZATIONS', '[]')
@@ -599,28 +378,35 @@ def main() -> None:
             print("WARNING: KNOWN_ORGANIZATIONS 환경변수의 JSON 형식이 올바르지 않습니다.")
             original_known_orgs = []
             known_orgs_lower = []
-        
+
+        # EMAIL_PATTERNS 로드 (Step 1 탐색용)
+        email_patterns = load_email_patterns()
+        org_display_names = {org.lower(): org for org in original_known_orgs}
+        print(f"EMAIL_PATTERNS {len(email_patterns)}개 로드 완료")
+
+        llm_model_blacklist = load_llm_model_blacklist()
+        if llm_model_blacklist:
+            print(f"LLM 모델 제외 목록 {len(llm_model_blacklist)}개 로드 완료")
+        else:
+            print("LLM 모델 제외 목록이 비어있습니다.")
+
         # 새로운 컬럼들 추가 (기존 컬럼들은 유지)
         df['organization'] = ""
-        # 토큰 컬럼은 모드에 관계없이 항상 생성
-        if use_ai_mode:
-            df['input_tokens'] = 0
-            df['output_tokens'] = 0
-        else:
-            df['input_tokens'] = "Not AI Mode"
-            df['output_tokens'] = "Not AI Mode"
+        df['input_tokens'] = "Not AI Mode"
+        df['output_tokens'] = "Not AI Mode"
         
         print(f"\n{'='*60}")
         print(f"논문 메타데이터 파싱 시작")
         print(f"총 {len(df)}개 논문 처리 예정")
         print(f"10개 논문마다 중간 저장 실행")
         print(f"사전 설정 기관: {len(original_known_orgs)}개")
-        print(f"처리 모드: {'AI + 사전 기관' if use_ai_mode else '사전 기관만'}")
+        print("처리 모드: 사전 기관만")
         print(f"{'='*60}")
         
         start_time = datetime.now()
         processed_count = 0
-        
+        llm_filtered_indices: List[int] = []
+
         # 각 논문의 HTML을 처리하여 기관 정보 추출
         for idx, row in df.iterrows():
             html_filtered = row['html_raw_text_with_tags_filtered']
@@ -647,155 +433,111 @@ def main() -> None:
             # 3단계: HTML에서 텍스트만 추출 (태그 제거)
             text_only = extract_text_from_html(html_without_authors)
             print(f"Text-only content: {len(text_only)} characters")
-            
+            text_only_lower = text_only.lower() if text_only else ""
+
             final_organizations = []  # 변수 초기화
-            
+
             try:
-                if use_ai_mode:
-                    # 4단계: GPT를 통한 기관 정보 추출
-                    gpt_organizations, token_usage = extract_organizations_with_gpt(cleaned_html, paper_id)
-                    print(f"GPT 추출 기관 ({len(gpt_organizations)}개): {gpt_organizations}")
-                    
-                    # 토큰 사용량 저장
-                    df.at[idx, 'input_tokens'] = token_usage['input_tokens']
-                    df.at[idx, 'output_tokens'] = token_usage['output_tokens']
-                    
-                    # 5단계: 사전 설정 기관 매칭 (텍스트만에서)
-                    known_found_orgs = find_known_organizations_in_text(
-                        text_only, known_orgs_lower, original_known_orgs
-                    )
-                    print(f"사전 설정 기관 발견 ({len(known_found_orgs)}개): {known_found_orgs}")
-                    
-                    # 6단계: GPT 결과와 사전 설정 기관 통합
-                    final_organizations = list(gpt_organizations)  # GPT 결과 복사
-                    
-                    # GPT가 누락한 사전 설정 기관 추가
-                    for org in known_found_orgs:
-                        if org not in final_organizations:
-                            final_organizations.append(org)
-                            print(f"INFO GPT가 누락한 기관 추가: {org}")
+                # Step 1: 이메일 도메인 기반 탐색 (EMAIL_PATTERNS, Pattern 1)
+                final_organizations = find_organizations_by_email_patterns(
+                    text_only, email_patterns, org_display_names
+                )
+                if final_organizations:
+                    print(f"[Step 1] 이메일 패턴으로 기관 발견 ({len(final_organizations)}개): {final_organizations}")
                 else:
-                    # 사전 기관 전용 모드: 사전 설정 기관만 검색 (텍스트만에서)
-                    final_organizations = find_known_organizations_in_text(
-                        text_only, known_orgs_lower, original_known_orgs
+                    # Step 2: 이메일 없이 기관명만 있는 경우 - 단어 경계 정확 매칭
+                    final_organizations = find_organizations_by_exact_name(
+                        text_only, email_patterns, org_display_names
                     )
-                    print(f"사전 설정 기관 발견 ({len(final_organizations)}개): {final_organizations}")
-                
-                # 결과를 JSON 형태로 저장
-                df.at[idx, 'organization'] = json.dumps(final_organizations, ensure_ascii=False)
-                
+                    if final_organizations:
+                        print(f"[Step 2] 정확한 기관명 매칭으로 발견 ({len(final_organizations)}개): {final_organizations}")
+                    else:
+                        print("[Step 1 & 2] 기관 발견 없음")
+
+                # LLM 모델 이름 필터링
+                llm_org_matches = []
+                llm_name_hits = set()
+                if final_organizations and llm_model_blacklist:
+                    for org in final_organizations:
+                        org_lower = org.lower()
+                        for llm_name in llm_model_blacklist:
+                            if llm_name in org_lower:
+                                llm_org_matches.append(org)
+                                llm_name_hits.add(llm_name)
+
+                llm_text_hits = set()
+                if text_only_lower and llm_model_blacklist:
+                    for llm_name in llm_model_blacklist:
+                        if llm_name in text_only_lower:
+                            llm_text_hits.add(llm_name)
+
+                if llm_org_matches or llm_text_hits:
+                    detected_llm_names = sorted(llm_name_hits.union(llm_text_hits))
+                    print(
+                        f"LLM 모델 이름 감지로 논문 제외: {detected_llm_names}"
+                        f" | 기관 문자열 일치: {llm_org_matches}"
+                    )
+                    llm_filtered_indices.append(idx)
+                    final_organizations = []
+                    df.at[idx, 'organization'] = "[]"
+                else:
+                    # 결과를 JSON 형태로 저장
+                    df.at[idx, 'organization'] = json.dumps(final_organizations, ensure_ascii=False)
+
             except Exception as e:
                 print(f"Paper {paper_id} - 기관 추출 실패: {str(e)}")
-                # 기본값으로 설정
                 final_organizations = []
                 df.at[idx, 'organization'] = "[]"
-                if use_ai_mode:
-                    df.at[idx, 'input_tokens'] = 0
-                    df.at[idx, 'output_tokens'] = 0
-                # 사전 기관 전용 모드에서는 토큰 컬럼이 이미 "Not AI Mode"로 설정되어 있으므로 건드리지 않음
             
             processed_count += 1
             
             print(f"최종 기관 ({len(final_organizations)}개): {final_organizations}")
             
-            # 10개마다 중간 저장
-            if processed_count % 10 == 0:
-                save_intermediate_results(df, output_file, processed_count)
-            
         
         # 처리 완료 시간
         total_elapsed = (datetime.now() - start_time).total_seconds()
         print(f"\n총 처리 시간: {total_elapsed/60:.1f}분")
-        
+
+        if llm_filtered_indices:
+            df = df.drop(index=llm_filtered_indices).reset_index(drop=True)
+            print(f"LLM 모델 이름으로 제외된 논문: {len(llm_filtered_indices)}개")
+
         # 결과 저장 로직
-        if use_ai_mode:
-            # AI 모드: GPT 추출 결과와 사전 기관 필터링 결과 모두 저장
-            
-            # 1) GPT 추출 결과 저장 (전체) - HTML 컬럼 제거
-            df_clean_ai = clean_dataframe_for_save(df, use_ai_mode=True)
-            ai_output_file = f"{PAR_DIR}/results/3_parsing_meta_data_ai_full.csv"
-            df_clean_ai.to_csv(ai_output_file, index=False, encoding='utf-8-sig')
-            print(f"AI 모드 전체 결과 저장: {ai_output_file}")
-            
-            # 2) 사전 기관 필터링된 결과 저장
-            if original_known_orgs:
-                df_filtered = df.copy()
-                filtered_indices = []
-                
-                for idx, row in df_filtered.iterrows():
-                    organizations = json.loads(row['organization']) if row['organization'] else []
-                    # 사전 설정 기관과 매칭되는 논문만 필터링
-                    if any(org for org in organizations if org.lower() in known_orgs_lower):
-                        filtered_indices.append(idx)
-                
-                if filtered_indices:
-                    df_filtered = df_filtered.iloc[filtered_indices]
-                    df_filtered_clean = clean_dataframe_for_save(df_filtered, use_ai_mode=True)
-                    filtered_output_file = f"{PAR_DIR}/results/3_parsing_meta_data_ai_filtered.csv"
-                    df_filtered_clean.to_csv(filtered_output_file, index=False, encoding='utf-8-sig')
-                    print(f"사전 기관 필터링된 결과 저장: {filtered_output_file} ({len(df_filtered)}개 논문)")
-                else:
-                    print("사전 기관과 일치하는 논문이 없어 필터링 파일을 생성하지 않습니다.")
-            
-            # 3) 메인 파일은 전체 결과로 설정 - HTML 컬럼 제거
-            df_clean_main = clean_dataframe_for_save(df, use_ai_mode=True)
-            df_clean_main.to_csv(output_file, index=False, encoding='utf-8-sig')
-            print(f"메인 결과 파일 저장 완료: {output_file}")
-            
+        df_filtered = df.copy()
+        filtered_indices = []
+
+        for idx, row in df_filtered.iterrows():
+            organizations = json.loads(row['organization']) if row['organization'] else []
+            if organizations:  # 사전 기관이 발견된 논문만
+                filtered_indices.append(idx)
+
+        if filtered_indices:
+            df_filtered = df_filtered.iloc[filtered_indices]
+            df_filtered_clean = clean_dataframe_for_save(df_filtered, use_ai_mode=False)
+
+            df_filtered_clean.to_csv(output_file, index=False, encoding='utf-8-sig')
+            print(f"사전 기관 필터링된 결과 저장: {output_file} ({len(df_filtered)}개 논문)")
         else:
-            # 사전 기관 전용 모드: 바로 필터링된 결과만 저장
-            df_filtered = df.copy()
-            filtered_indices = []
-            
-            for idx, row in df_filtered.iterrows():
-                organizations = json.loads(row['organization']) if row['organization'] else []
-                if organizations:  # 사전 기관이 발견된 논문만
-                    filtered_indices.append(idx)
-            
-            if filtered_indices:
-                df_filtered = df_filtered.iloc[filtered_indices]
-                df_filtered_clean = clean_dataframe_for_save(df_filtered, use_ai_mode=False)
-                df_filtered_clean.to_csv(output_file, index=False, encoding='utf-8-sig')
-                print(f"사전 기관 필터링된 결과 저장: {output_file} ({len(df_filtered)}개 논문)")
-            else:
-                # 빈 결과도 저장
-                pd.DataFrame().to_csv(output_file, index=False, encoding='utf-8-sig')
-                print(f"사전 기관과 일치하는 논문이 없음: {output_file} (빈 파일 생성)")
-        
-        # 백업 파일 저장
-        save_backup_file(df, start_date, end_date)
+            empty_df = pd.DataFrame(columns=df.columns)
+            empty_df_clean = clean_dataframe_for_save(empty_df, use_ai_mode=False)
+
+            empty_df_clean.to_csv(output_file, index=False, encoding='utf-8-sig')
+            print(f"사전 기관과 일치하는 논문이 없음: {output_file} (빈 파일이지만 컬럼 헤더는 포함)")
         
         # 결과 통계
         total_orgs = 0
         papers_with_orgs = 0
-        total_input_tokens = 0
-        total_output_tokens = 0
         
         print(f"\n=== 기관 추출 결과 통계 ===")
         for idx, row in df.iterrows():
             organizations = json.loads(row['organization']) if row['organization'] else []
             
-            if use_ai_mode:
-                input_tokens = row.get('input_tokens', 0)
-                output_tokens = row.get('output_tokens', 0)
-                # 숫자인 경우만 합계에 포함 (문자열 "Not AI Mode"는 제외)
-                if isinstance(input_tokens, (int, float)) and isinstance(output_tokens, (int, float)):
-                    total_input_tokens += input_tokens
-                    total_output_tokens += output_tokens
-                
-                if organizations:
-                    papers_with_orgs += 1
-                    total_orgs += len(organizations)
-                    print(f"Paper {idx+1}: {len(organizations)}개 기관 - {organizations} (토큰: {input_tokens}+{output_tokens})")
-                else:
-                    print(f"Paper {idx+1}: 기관 정보 없음 (토큰: {input_tokens}+{output_tokens})")
+            if organizations:
+                papers_with_orgs += 1
+                total_orgs += len(organizations)
+                print(f"Paper {idx+1}: {len(organizations)}개 기관 - {organizations}")
             else:
-                if organizations:
-                    papers_with_orgs += 1
-                    total_orgs += len(organizations)
-                    print(f"Paper {idx+1}: {len(organizations)}개 기관 - {organizations} (토큰: Not AI Mode)")
-                else:
-                    print(f"Paper {idx+1}: 기관 정보 없음 (토큰: Not AI Mode)")
+                print(f"Paper {idx+1}: 기관 정보 없음")
         
         print(f"\n전체 추출된 기관 수: {total_orgs}개")
         print(f"기관 정보가 있는 논문: {papers_with_orgs}개")
@@ -810,10 +552,7 @@ def main() -> None:
                     papers_with_known_orgs += 1
             print(f"사전 설정 기관과 일치하는 논문: {papers_with_known_orgs}개")
         
-        if use_ai_mode:
-            print(f"총 토큰 사용량: {total_input_tokens} input + {total_output_tokens} output = {total_input_tokens + total_output_tokens} total")
-        else:
-            print("사전 기관 전용 모드 - API 비용 없음")
+        print("사전 기관 전용 모드 - API 비용 없음")
         
         # 모든 기관 리스트 (중복 제거)
         all_organizations = set()

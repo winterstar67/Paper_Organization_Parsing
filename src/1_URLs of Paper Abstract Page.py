@@ -2,63 +2,32 @@ import requests
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import re
+import json
 import pandas as pd
 import time
 import os
 import pytz
 from typing import List, Dict, Any, Optional, Tuple
-
-CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-PAR_DIR = os.path.dirname(CUR_DIR)
-
+from pipeline_config import results_dir, backup_dir, master_id_table_path, PROJECT_DIR
 
 def create_directories() -> None:
     """
     Create necessary directories for results and backups
-    
+
     Creates directory structure required for paper collection and backup storage.
-    
+
     Input: None
-    
+
     Output: None (creates directories)
-        - results: 결과 저장 directory
-        - backup/1_URL_of_paper_abstractions: results와 동일하지만 backup용으로 저장하는 폴더 (날짜 정보까지 저장됨)
-        - backup/Failed: 해당 날짜의 subject에 대한 논문이 없는 경우
-        - backup/ID_TABLE: ID_TABLE.csv 백업 폴더
-    
+        - results/{date}/Phase_1: 결과 저장 directory
+        - backup/{date}/Phase_1: results와 동일하지만 backup용으로 저장하는 폴더 (날짜 정보까지 저장됨)
+
     Example:
         >>> create_directories()
-        # Creates directories: results/, backup/1_URL_of_paper_abstractions/, backup/Failed/, backup/ID_TABLE/
+        # Creates directories: results/{date}/Phase_1/, backup/{date}/Phase_1/
     """
-    os.makedirs(f'{PAR_DIR}/results', exist_ok=True)
-    os.makedirs(f'{PAR_DIR}/backup/1_URL_of_paper_abstractions', exist_ok=True)
-    os.makedirs(f'{PAR_DIR}/backup/Failed', exist_ok=True)
-    os.makedirs(f'{PAR_DIR}/backup/ID_TABLE', exist_ok=True)
-
-def generate_date_pairs(start_date: datetime, end_date: datetime) -> List[List[datetime]]:
-    """
-    Generate consecutive date pairs for the given range
-    
-    Creates a list of date pairs where each pair represents a day range [start, start+1].
-    
-    Input:
-        - start_date: datetime
-            - Ex: datetime(2025, 5, 8)
-        - end_date: datetime  
-            - Ex: datetime(2025, 5, 10)
-    
-    Output:
-        - list of date pairs: List[List[datetime]]
-            - Ex: [[datetime(2025, 5, 8), datetime(2025, 5, 9)], [datetime(2025, 5, 9), datetime(2025, 5, 10)]]
-    
-    Example:
-        >>> start = datetime(2025, 5, 8)
-        >>> end = datetime(2025, 5, 10)
-        >>> generate_date_pairs(start, end)
-        [[datetime(2025, 5, 8), datetime(2025, 5, 9)], [datetime(2025, 5, 9), datetime(2025, 5, 10)]]
-    """
-    return [[start_date + timedelta(days=i), start_date + timedelta(days=i + 1)]
-            for i in range((end_date - start_date).days)]
+    results_dir('Phase_1')
+    backup_dir('Phase_1')
 
 def parse_paper_data(paper_element: Any) -> Dict[str, str]:
     """
@@ -74,7 +43,8 @@ def parse_paper_data(paper_element: Any) -> Dict[str, str]:
         - paper_data: Dict[str, str] - Dictionary containing paper metadata
             - Ex: {
                 'abs_url': 'https://arxiv.org/abs/2401.12345',
-                'html_url': 'https://arxiv.org/html/2401.12345', 
+                'html_url': 'https://arxiv.org/html/2401.12345',
+                'pdf_url': 'https://arxiv.org/pdf/2401.12345',
                 'Title': 'Advanced Machine Learning Techniques',
                 'Authors': 'John Doe; Jane Smith',
                 'Submitted': '8 Jan 2024',
@@ -100,9 +70,12 @@ def parse_paper_data(paper_element: Any) -> Dict[str, str]:
         paper_data['abs_url'] = abs_url
         # Generate HTML URL by replacing /abs/ with /html/
         paper_data['html_url'] = abs_url.replace('/abs/', '/html/') if abs_url else ''
+        # Generate PDF URL by replacing /abs/ with /pdf/
+        paper_data['pdf_url'] = abs_url.replace('/abs/', '/pdf/') if abs_url else ''
     else:
         paper_data['abs_url'] = ''
         paper_data['html_url'] = ''
+        paper_data['pdf_url'] = ''
     
     # Extract title
     title_element = paper_element.find('p', class_='title')
@@ -233,12 +206,12 @@ def remove_internal_duplicates(papers_data: List[Dict[str, str]]) -> List[Dict[s
     
     return unique_papers
 
-def build_multi_subject_url(subjects: List[str], start_date: datetime, end_date: datetime) -> str:
+def build_multi_subject_url(subjects: List[str], start_date: datetime, end_date: datetime, start: int = 0) -> str:
     """
     Build arXiv advanced search URL for multiple subjects
-    
+
     Creates a single URL that searches for papers across multiple subject categories simultaneously.
-    
+
     Input:
         - subjects: List[str] - List of arXiv subject categories
             - Ex: ['cs.AI', 'cs.LG', 'cs.CV', 'cs.CG']
@@ -246,11 +219,13 @@ def build_multi_subject_url(subjects: List[str], start_date: datetime, end_date:
             - Ex: datetime(2025, 5, 8)
         - end_date: datetime - End date for paper search
             - Ex: datetime(2025, 5, 9)
-    
+        - start: int - Result offset for pagination (0, 200, 400, ...)
+            - Ex: 0 (first page), 200 (second page)
+
     Output:
         - url: str - Complete arXiv advanced search URL
             - Ex: 'https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term=cs.AI...'
-    
+
     Example:
         >>> subjects = ['cs.AI', 'cs.LG', 'cs.CV']
         >>> start = datetime(2025, 5, 8)
@@ -261,10 +236,10 @@ def build_multi_subject_url(subjects: List[str], start_date: datetime, end_date:
     """
     start_str = start_date.strftime('%Y-%m-%d')
     end_str = end_date.strftime('%Y-%m-%d')
-    
+
     # Base URL with common parameters
     base_url = "https://arxiv.org/search/advanced?advanced="
-    
+
     # Build terms parameters for each subject
     terms_params = []
     for i, subject in enumerate(subjects):
@@ -282,7 +257,7 @@ def build_multi_subject_url(subjects: List[str], start_date: datetime, end_date:
                 f"terms-{i}-term={subject}",
                 f"terms-{i}-field=all"
             ])
-    
+
     # Common parameters
     common_params = [
         "classification-physics_archives=all",
@@ -295,21 +270,47 @@ def build_multi_subject_url(subjects: List[str], start_date: datetime, end_date:
         "abstracts=show",
         "size=200",
         "order=-announced_date_first",
-        "start=0"
+        f"start={start}"
     ]
-    
+
     # Combine all parameters
     all_params = terms_params + common_params
     url = base_url + "&" + "&".join(all_params)
-    
+
     return url
+
+def _parse_total_results(soup: BeautifulSoup) -> Optional[int]:
+    """
+    Parse total result count from arXiv search results page.
+
+    Extracts the total number from text like "Showing 1–200 of 217 results".
+
+    Input:
+        - soup: BeautifulSoup - Parsed HTML of an arXiv search results page
+
+    Output:
+        - total: Optional[int] - Total number of results, or None if not found
+            - Ex: 217
+
+    Example:
+        >>> soup = BeautifulSoup('<h1 class="title is-clearfix">Showing 1–200 of 217 results</h1>', 'html.parser')
+        >>> _parse_total_results(soup)
+        217
+    """
+    title_el = soup.find('h1', class_='title')
+    if title_el:
+        match = re.search(r'of\s+([\d,]+)\s+results', title_el.get_text())
+        if match:
+            return int(match.group(1).replace(',', ''))
+    return None
 
 def fetch_arxiv_data(subjects: List[str], start_date: datetime, end_date: datetime) -> Optional[List[Dict[str, str]]]:
     """
-    Fetch detailed arXiv paper data for given subjects and date range
-    
-    Sends HTTP request to arXiv advanced search API with multiple subjects and parses HTML response to extract paper metadata.
-    
+    Fetch detailed arXiv paper data for given subjects and date range (all pages).
+
+    Sends HTTP requests to arXiv advanced search API, automatically paginating
+    through all result pages (200 results per page) to collect every paper.
+
     Input:
         - subjects: List[str] - List of arXiv subject categories
             - Ex: ['cs.AI', 'cs.LG', 'cs.CV', 'cs.CG']
@@ -317,7 +318,7 @@ def fetch_arxiv_data(subjects: List[str], start_date: datetime, end_date: dateti
             - Ex: datetime(2025, 5, 8)
         - end_date: datetime - End date for paper search
             - Ex: datetime(2025, 5, 9)
-    
+
     Output:
         - papers_data: Optional[List[Dict[str, str]]] - List of paper dictionaries or None if request failed
             - Ex: [
@@ -336,80 +337,128 @@ def fetch_arxiv_data(subjects: List[str], start_date: datetime, end_date: dateti
                     'collected_at_est': '2025-05-08 01:30:25 EST/EDT'
                 }
             ]
-    
+
     Example:
         >>> papers = fetch_arxiv_data(['cs.AI', 'cs.LG'], datetime(2025, 5, 8), datetime(2025, 5, 9))
         >>> print(len(papers)) if papers else print('Request failed')
         15
     """
+    PAGE_SIZE = 200
     start_str = start_date.strftime('%Y-%m-%d')
     end_str = end_date.strftime('%Y-%m-%d')
-    
-    url = build_multi_subject_url(subjects, start_date, end_date)
-    
-    print(f"요청 URL: {url}")
-    
-    try:
-        response = requests.get(url, timeout=30)
-        response.raise_for_status()  # Raises an HTTPError for bad responses
-        
+
+    # Get collection time in both timezones
+    korea_tz = pytz.timezone('Asia/Seoul')
+    us_tz = pytz.timezone('US/Eastern')
+    korea_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S KST')
+    us_time = datetime.now(us_tz).strftime('%Y-%m-%d %H:%M:%S EST/EDT')
+
+    all_papers: List[Dict[str, str]] = []
+    offset = 0
+    total_results = None
+
+    while True:
+        url = build_multi_subject_url(subjects, start_date, end_date, start=offset)
+        page_num = offset // PAGE_SIZE + 1
+        print(f"요청 URL (page {page_num}): {url}")
+
+        try:
+            response = requests.get(url, timeout=30)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Request failed for {subjects} from {start_str} to {end_str} (page {page_num}): {str(e)}")
+            return None
+
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Find all paper entries
+
+        # Parse total results on the first page
+        if total_results is None:
+            total_results = _parse_total_results(soup)
+            if total_results is not None:
+                total_pages = (total_results + PAGE_SIZE - 1) // PAGE_SIZE
+                print(f"총 {total_results}개 논문 발견 ({total_pages} 페이지)")
+            else:
+                # Fallback: if we can't parse total, treat as single page
+                total_results = PAGE_SIZE
+
         paper_elements = soup.find_all('li', class_='arxiv-result')
-        
+
         if not paper_elements:
-            print(f"No papers found for {subjects} from {start_str} to {end_str}")
-            return []
-        
-        papers_data = []
-        
-        # Get collection time in both timezones
-        korea_tz = pytz.timezone('Asia/Seoul')
-        us_tz = pytz.timezone('US/Eastern')
-        
-        korea_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S KST')
-        us_time = datetime.now(us_tz).strftime('%Y-%m-%d %H:%M:%S EST/EDT')
-        
+            if offset == 0:
+                print(f"No papers found for {subjects} from {start_str} to {end_str}")
+                return []
+            break
+
         for paper_element in paper_elements:
             paper_data = parse_paper_data(paper_element)
             paper_data['collected_at_kst'] = korea_time
             paper_data['collected_at_est'] = us_time
-            papers_data.append(paper_data)
-        
-        return papers_data
-        
-    except requests.exceptions.RequestException as e:
-        print(f"❌ Request failed for {subjects} from {start_str} to {end_str}: {str(e)}")
-        return None  # Return None to indicate failure
+            all_papers.append(paper_data)
+
+        print(f"  페이지 {page_num}: {len(paper_elements)}개 논문 수집 (누적 {len(all_papers)}개)")
+
+        # Move to next page if there are more results
+        offset += PAGE_SIZE
+        if offset >= total_results:
+            break
+
+        # Polite delay between pages
+        time.sleep(3)
+
+    # Validation: compare collected count against webpage total
+    collected_count = len(all_papers)
+    if total_results is not None:
+        if collected_count == total_results:
+            validation_status = "PASS"
+            print(f"✅ 수집 검증 통과: 웹페이지 표시 {total_results}개 == 실제 수집 {collected_count}개")
+        else:
+            validation_status = "FAIL"
+            print(f"⚠️ 수집 검증 실패: 웹페이지 표시 {total_results}개 != 실제 수집 {collected_count}개 (차이: {total_results - collected_count}개)")
+    else:
+        validation_status = "UNKNOWN"
+        print(f"⚠️ 수집 검증 불가: 웹페이지에서 총 논문 수를 파싱하지 못했습니다. 실제 수집: {collected_count}개")
+
+    # Save validation report for downstream phases (e.g., email notification)
+    validation_report = {
+        "webpage_total": total_results,
+        "collected_count": collected_count,
+        "validation_status": validation_status,
+        "timestamp": datetime.now(pytz.timezone('Asia/Seoul')).strftime('%Y-%m-%d %H:%M:%S KST')
+    }
+    validation_path = os.path.join(results_dir('Phase_1'), 'collection_validation.json')
+    with open(validation_path, 'w', encoding='utf-8') as f:
+        json.dump(validation_report, f, ensure_ascii=False, indent=2)
+    print(f"검증 리포트 저장: {validation_path}")
+
+    return all_papers
 
 def load_or_create_id_table() -> pd.DataFrame:
     """
     Load existing ID_TABLE.csv or create new one if it doesn't exist
-    
+
     Attempts to load ID table from CSV file, creates empty DataFrame if file doesn't exist.
-    
+
     Input: None
-    
+
     Output:
-        - DataFrame: ID table with ID, Paper_Title, and Submitted columns
-            - Ex: pandas.DataFrame with columns ['ID', 'Paper_Title', 'Submitted']
-                ID          | Paper_Title              | Submitted
-                '250508_1'  | 'Advanced Machine Learning' | '8 May 2025'
-                '250508_2'  | 'Deep Neural Networks'      | '8 May 2025'
-    
+        - DataFrame: ID table with ID, Paper_Title, Submitted, and created_datetime_UTC9 columns
+            - Ex: pandas.DataFrame with columns ['ID', 'Paper_Title', 'Submitted', 'created_datetime_UTC9']
+                ID          | Paper_Title              | Submitted    | created_datetime_UTC9
+                '250508_1'  | 'Advanced Machine Learning' | '8 May 2025' | '2025-05-08 14:30:25'
+                '250508_2'  | 'Deep Neural Networks'      | '8 May 2025' | '2025-05-08 14:30:25'
+
     Example:
         >>> df = load_or_create_id_table()
         >>> print(df.columns.tolist())
-        ['ID', 'Paper_Title', 'Submitted']
+        ['ID', 'Paper_Title', 'Submitted', 'created_datetime_UTC9']
     """
-    id_table_path = os.path.join(PAR_DIR, 'results', 'ID_TABLE.csv')
-    
+    id_table_path = master_id_table_path()
+
     if os.path.exists(id_table_path):
         return pd.read_csv(id_table_path, encoding='utf-8-sig')
     else:
         # Create empty ID table
-        return pd.DataFrame(columns=['ID', 'Paper_Title', 'Submitted'])
+        return pd.DataFrame(columns=['ID', 'Paper_Title', 'Submitted', 'created_datetime_UTC9'])
 
 def generate_paper_id(date_str: str, sequence_num: int) -> str:
     """
@@ -523,13 +572,13 @@ def save_results(papers_data: List[Dict[str, str]], start_date: datetime, end_da
         print("No data to save")
         return
     
-    csv_path = f'{PAR_DIR}/results/1_URL_of_paper_abstractions.csv'
+    csv_path = os.path.join(results_dir('Phase_1'), '1_URL_of_paper_abstractions.csv')
     
     # Create DataFrame with new data
     new_df = pd.DataFrame(papers_data)
     
-    # Reorder columns to match the required format (now including Abstract, Comments, Journal_ref)
-    column_order = ['collected_at_kst', 'collected_at_est', 'abs_url', 'html_url', 'Title', 'Authors', 
+    # Reorder columns to match the required format (including PDF URL and extended metadata)
+    column_order = ['collected_at_kst', 'collected_at_est', 'abs_url', 'html_url', 'pdf_url', 'Title', 'Authors', 
                    'Submitted', 'Originally_announced', 'Subjects', 'Abstract', 'Comments', 'Journal_ref']
     new_df = new_df[column_order]
     
@@ -558,60 +607,69 @@ def save_results(papers_data: List[Dict[str, str]], start_date: datetime, end_da
     # Create DataFrame with new papers only
     new_df = pd.DataFrame(new_papers)
     
-    # Reorder columns to match the required format (now including Abstract, Comments, Journal_ref)
-    column_order = ['collected_at_kst', 'collected_at_est', 'abs_url', 'html_url', 'Title', 'Authors', 
+    # Reorder columns to match the required format (including PDF URL and extended metadata)
+    column_order = ['collected_at_kst', 'collected_at_est', 'abs_url', 'html_url', 'pdf_url', 'Title', 'Authors', 
                    'Submitted', 'Originally_announced', 'Subjects', 'Abstract', 'Comments', 'Journal_ref']
     new_df = new_df[column_order]
     
     # Generate IDs for new papers and update ID table
     paper_ids = []
     current_date = datetime.now().strftime('%Y-%m-%d')
-    
+
+    # Get current time in UTC+9 for created_datetime_UTC9
+    utc9_tz = pytz.timezone('Asia/Seoul')
+    created_datetime_utc9 = datetime.now(utc9_tz).strftime('%Y-%m-%d %H:%M:%S')
+
     # Get starting sequence number for current date
     start_sequence_num = get_next_sequence_number(id_table_df, current_date)
-    
+
     for i, paper in enumerate(new_papers):
         # Generate sequential ID (start_sequence_num + i)
         sequence_num = start_sequence_num + i
         paper_id = generate_paper_id(current_date, sequence_num)
         paper_ids.append(paper_id)
-        
+
         # Add to ID table (use original submitted date format)
         new_row = pd.DataFrame({
             'ID': [paper_id],
             'Paper_Title': [paper['Title']],
-            'Submitted': [paper['Submitted']]
+            'Submitted': [paper['Submitted']],
+            'created_datetime_UTC9': [created_datetime_utc9]
         })
         id_table_df = pd.concat([id_table_df, new_row], ignore_index=True)
     
     # Add ID column to new_df
     new_df.insert(0, 'ID', paper_ids)
     
-    # Save updated ID table
-    id_table_path = os.path.join(PAR_DIR, 'results', 'ID_TABLE.csv')
+    # Save updated ID table (master + snapshot copy in Phase_1)
+    id_table_path = master_id_table_path()
     id_table_df.to_csv(id_table_path, index=False, encoding='utf-8-sig')
     print(f"ID 테이블 업데이트 완료: {id_table_path} (총 {len(id_table_df)}개 논문)")
-    
+
+    id_table_snapshot_path = os.path.join(results_dir('Phase_1'), 'ID_TABLE.csv')
+    id_table_df.to_csv(id_table_snapshot_path, index=False, encoding='utf-8-sig')
+    print(f"ID 테이블 스냅샷 저장 완료: {id_table_snapshot_path}")
+
     # Backup ID table with current date
     current_date_short = datetime.now().strftime('%y%m%d')
-    id_table_backup_path = os.path.join(PAR_DIR, 'backup', 'ID_TABLE', f'ID_TABLE_{current_date_short}.csv')
+    id_table_backup_path = os.path.join(backup_dir('Phase_1'), f'ID_TABLE_{current_date_short}.csv')
     id_table_df.to_csv(id_table_backup_path, index=False, encoding='utf-8-sig')
     print(f"ID 테이블 백업 완료: {id_table_backup_path}")
-    
+
     # Overwrite results file with only new data (no accumulation)
     new_df.to_csv(csv_path, index=False, encoding='utf-8-sig')
     print(f"결과 파일 저장 완료 (덮어쓰기): {csv_path}")
-    
+
     # Save backup of new data only with date range format
     start_date_str = start_date.strftime('%y%m%d')
     end_date_str = end_date.strftime('%y%m%d')
-    backup_path = os.path.join(PAR_DIR, 'backup', '1_URL_of_paper_abstractions', f'1_URL_of_paper_abstractions_StartDate{start_date_str}_EndDate{end_date_str}.csv')
+    backup_path = os.path.join(backup_dir('Phase_1'), f'1_URL_of_paper_abstractions_StartDate{start_date_str}_EndDate{end_date_str}.csv')
     new_df.to_csv(backup_path, index=False, encoding='utf-8-sig')
     print(f"백업 파일 저장 완료: {backup_path}")
     
     print(f"새로 수집된 논문 수: {len(new_df)}")
 
-def save_failed_requests(failed_requests: List[Dict[str, str]], start_date: datetime, end_date: datetime, backup_filename: Optional[str] = None) -> None:
+def save_failed_requests(failed_requests: List[Dict[str, str]], start_date: datetime, end_date: datetime) -> None:
     """
     Save failed request information to CSV files
     
@@ -631,9 +689,6 @@ def save_failed_requests(failed_requests: List[Dict[str, str]], start_date: date
             - Ex: datetime(2025, 5, 8)
         - end_date: datetime - End date of collection period  
             - Ex: datetime(2025, 5, 9)
-        - backup_filename: Optional[str] - Custom backup filename (not used in current implementation)
-            - Ex: 'custom_failed_backup.csv'
-    
     Output: None (saves files)
         - results/Failed_list.csv: Main failed requests file (overwritten)
         - backup/Failed/Failed_list_StartDateYYMMDD_EndDateYYMMDD.csv: Backup file
@@ -649,14 +704,14 @@ def save_failed_requests(failed_requests: List[Dict[str, str]], start_date: date
     failed_df = pd.DataFrame(failed_requests)
     
     # Overwrite main failed list
-    failed_csv_path = 'results/Failed_list.csv'
+    failed_csv_path = os.path.join(results_dir('Phase_1'), 'Failed_list.csv')
     failed_df.to_csv(failed_csv_path, index=False, encoding='utf-8-sig')
     print(f"실패한 요청 저장: {failed_csv_path}")
-    
+
     # Save backup with date range format
     start_date_str = start_date.strftime('%y%m%d')
     end_date_str = end_date.strftime('%y%m%d')
-    backup_path = f'backup/Failed/Failed_list_StartDate{start_date_str}_EndDate{end_date_str}.csv'
+    backup_path = os.path.join(backup_dir('Phase_1'), f'Failed_list_StartDate{start_date_str}_EndDate{end_date_str}.csv')
     failed_df.to_csv(backup_path, index=False, encoding='utf-8-sig')
     print(f"실패한 요청 백업 저장: {backup_path}")
 
@@ -700,35 +755,55 @@ def main() -> None:
     print(f"프로그램 실행 시각 (한국 시간): {korea_now.strftime('%Y-%m-%d %H:%M:%S KST')}")
     print(f"프로그램 실행 시각 (미국 뉴욕 시간): {us_now.strftime('%Y-%m-%d %H:%M:%S EST/EDT')}")
     
-    # Calculate search date range - search backwards from yesterday until papers found
-    # Always search day by day, maximum 2 weeks back
-    us_today = us_now.date()
-    us_yesterday = us_today - timedelta(days=1)  # arXiv doesn't publish today's papers
-    
-    print("어제부터 역순으로 논문을 찾습니다. (최대 2주)")
-    # Try to find papers starting from yesterday, going back up to 14 days
-    found_papers = False
-    for days_back in range(1, 15):  # 1일전(어제) ~ 14일전 (2주)
-        test_date = us_today - timedelta(days=days_back)
-        test_start = datetime.combine(test_date, datetime.min.time())
-        test_end = datetime.combine(test_date + timedelta(days=1), datetime.min.time())
-        
-        print(f"{days_back}일 전({test_date}) 논문 확인 중...")
-        test_papers = fetch_arxiv_data(['cs.AI', 'cs.LG'], test_start, test_end)
-        
-        if test_papers and len(test_papers) > 0:
-            print(f"{days_back}일 전({test_date})에 {len(test_papers)}개 논문 발견!")
-            start_target_date = test_date
-            end_target_date = test_date
-            found_papers = True
-            break
-        else:
-            print(f"{days_back}일 전({test_date})에 논문이 없습니다.")
-    
-    if not found_papers:
-        print("최근 2주 동안 논문을 찾을 수 없습니다. 어제 날짜로 검색을 시도합니다.")
-        start_target_date = us_yesterday
-        end_target_date = us_yesterday
+    # Optional manual date range via env vars (YYYY-MM-DD)
+    env_start = os.getenv("PAPER_START_DATE", "").strip()
+    env_end = os.getenv("PAPER_END_DATE", "").strip()
+
+    if env_start and env_end:
+        try:
+            start_target_date = datetime.strptime(env_start, "%Y-%m-%d").date()
+            end_target_date = datetime.strptime(env_end, "%Y-%m-%d").date()
+            if end_target_date < start_target_date:
+                raise ValueError("END date is earlier than START date")
+            print(f"수동 기간 설정: {env_start} ~ {env_end}")
+        except Exception as e:
+            print(f"WARNING 수동 기간 설정 실패: {e}")
+            env_start = ""
+            env_end = ""
+
+    discovered_papers = None
+
+    if not (env_start and env_end):
+        # Calculate search date range - search backwards from yesterday until papers found
+        # Always search day by day, maximum 2 weeks back
+        us_today = us_now.date()
+        us_yesterday = us_today - timedelta(days=1)  # arXiv doesn't publish today's papers
+
+        print("어제부터 역순으로 논문을 찾습니다. (최대 3일)")
+        # Try to find papers starting from yesterday, going back up to 3 days
+        found_papers = False
+        for days_back in range(1, 4):  # 1일전(어제) ~ 3일전
+            test_date = us_today - timedelta(days=days_back)
+            test_start = datetime.combine(test_date, datetime.min.time())
+            test_end = datetime.combine(test_date + timedelta(days=1), datetime.min.time())
+
+            print(f"{days_back}일 전({test_date}) 논문 확인 중...")
+            test_papers = fetch_arxiv_data(['cs.AI', 'cs.LG'], test_start, test_end)
+
+            if test_papers and len(test_papers) > 0:
+                print(f"{days_back}일 전({test_date})에 {len(test_papers)}개 논문 발견!")
+                start_target_date = test_date
+                end_target_date = test_date
+                discovered_papers = test_papers  # 재사용을 위해 저장
+                found_papers = True
+                break
+            else:
+                print(f"{days_back}일 전({test_date})에 논문이 없습니다.")
+
+        if not found_papers:
+            print("최근 3일 동안 논문을 찾을 수 없습니다. 어제 날짜로 검색을 시도합니다.")
+            start_target_date = us_yesterday
+            end_target_date = us_yesterday
 
     start_date = datetime.combine(start_target_date, datetime.min.time())
     end_date = datetime.combine(end_target_date + timedelta(days=1), datetime.min.time())
@@ -741,7 +816,10 @@ def main() -> None:
     print(f"======================================================== 통합 검색: {', '.join(subjects)} ========================================================")
     print(f" = = = = = = = = = = =   {start_date.strftime('%Y-%m-%d')} ~ {end_date.strftime('%Y-%m-%d')}")
     
-    papers_data = fetch_arxiv_data(subjects, start_date, end_date)
+    if discovered_papers is not None:
+        papers_data = discovered_papers  # 탐색 루프에서 이미 가져온 데이터 재사용
+    else:
+        papers_data = fetch_arxiv_data(subjects, start_date, end_date)
     
     # Check if request failed
     if papers_data is None:
@@ -770,7 +848,7 @@ def main() -> None:
     
     # Save failed requests if any
     if failed_requests:
-        save_failed_requests(failed_requests, start_date, end_date, f'Failed_list_{datetime.now().strftime("%Y-%m-%d")}.csv')
+        save_failed_requests(failed_requests, start_date, end_date)
         print(f"⚠️ {len(failed_requests)}개의 요청이 실패했습니다. Failed_list.csv를 확인하세요.")
     
     print("Phase 1 완료!")

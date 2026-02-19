@@ -1,0 +1,39 @@
+# docker-compose.yml은 여러 컨테이너 서비스를 한번에 정의하고 실행하는 설정 파일입니다.
+# 아래 항목들은 아직 실제 서비스 블록을 만들지 않고, 나중에 어떤 요소를 채울지 설명용으로만 적어 둡니다.
+#
+# services:
+#   app:                        # 개별 컨테이너 서비스 이름
+#     build: .                  # 현재 디렉터리의 Dockerfile로 이미지를 빌드하도록 지정
+#     image: paper-pipeline:dev # 이미지를 미리 빌드해 두고 사용할 수도 있음 (build 대신 image 사용)
+#     container_name: app       # 컨테이너 이름을 고정하고 싶은 경우 지정
+#     command:                  # Dockerfile의 CMD를 덮어쓰고 싶을 때 원하는 실행 명령 입력
+#
+#   db:                         # 다른 서비스 예시 (예: PostgreSQL)
+#     image: postgres:16        # 공식 이미지 사용
+#     environment:              # 컨테이너 내부 환경 변수 정의 (DB 비밀번호 등)
+#       POSTGRES_PASSWORD: example
+#     depends_on:               # app이 db보다 나중에 뜨도록 의존 관계를 명시
+#       - app
+#
+# volumes:                      # 로컬 ↔ 컨테이너 파일 동기화를 위해 사용
+#   - ./results:/app/results    # 예시: 로컬 results 폴더를 컨테이너 /app/results 와 연결
+#   - ./logs:/app/logs          # 여러 경로를 추가할 수 있음
+#
+# ports:
+#   - "8000:8000"              # 예시: 컨테이너 8000포트를 로컬 8000포트와 연결 (host:container)
+#   - "9229:9229"              # 디버깅 포트를 노출하고 싶을 때 추가
+#
+# networks:
+#   default:                    # 기본 네트워크를 사용하거나, 아래처럼 사용자 정의 네트워크를 선언 가능
+#   paper-net:                  # custom 네트워크를 만들 때
+#     driver: bridge            # 브리지 네트워크 드라이버 사용 (docker network create paper-net 과 동일 효과)
+#
+# volumes:
+#   shared-data:                # 네임드 볼륨을 선언해 여러 서비스가 공용 데이터 저장소를 사용할 수 있음
+#
+# 사용 예시 명령어 요약
+# - docker compose build             : services 블록에 있는 모든 이미지 빌드만 수행 (컨테이너 실행 X)
+# - docker compose up --build        : 필요하면 빌드 후 컨테이너 실행까지 진행
+# - docker compose up --build --no-start : 빌드하고 컨테이너를 생성만 해 둔 뒤 실행은 나중에 docker compose start
+# - docker compose down              : 생성된 컨테이너/네트워크/볼륨(옵션)에 대한 정리를 수행
+# - docker compose ps                : 현재 compose 프로젝트 내 컨테이너 상태 확인
