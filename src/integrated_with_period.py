@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 integrated.py
-Integrated arXiv Paper Collection and Gmail Notification System
+Integrated Local Paper Parsing and Gmail Notification System
 
 Description:
-    - Runs the complete paper collection pipeline (phases 1-5)
-    - Phase 1-4: Paper collection, HTML extraction, organization parsing, data integration
+    - Runs the complete local paper parsing pipeline (phases 1-5)
+    - Phase 1-4: Input pool normalization, HTML extraction, organization parsing, data integration
     - Phase 5: Gmail notification with filtered results
     - Configurable organizations via .env file
 
@@ -117,10 +117,10 @@ def run_script(script_name: str, input_data: str = None, show_realtime: bool = F
 
 def main():
     """메인 함수 - 통합 파이프라인을 실행합니다."""
-    print("arXiv 논문 수집 및 알림 통합 시스템 시작")
+    print("로컬 논문 파싱 및 알림 통합 시스템 시작")
     print(f"시작 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    parser = argparse.ArgumentParser(description="arXiv 논문 수집 통합 파이프라인 (기간 지정)")
+    parser = argparse.ArgumentParser(description="로컬 논문 파싱 통합 파이프라인 (기간 인자 호환)")
     parser.add_argument('--PAPER_START_DATE', type=str, default=None, help='수집 시작 날짜 (YYYY-MM-DD)')
     parser.add_argument('--PAPER_END_DATE', type=str, default=None, help='수집 종료 날짜 (YYYY-MM-DD)')
     args = parser.parse_args()
@@ -134,12 +134,12 @@ def main():
         os.environ["PAPER_END_DATE"] = period_end
         print(f"[설정] 수동 기간: {period_start} ~ {period_end}")
     else:
-        print("[설정] 수동 기간 미설정: 기본 최근 논문 수집 로직 사용")
+        print("[설정] 수동 기간 미설정: 입력 논문 풀의 Submitted 컬럼 기준으로 처리")
     
-    # Step 1: Run Phase 1 - URL Collection
-    print(f"\n[PHASE 1] 논문 URL 수집 시작")
+    # Step 1: Run Phase 1 - Input pool normalization
+    print(f"\n[PHASE 1] 로컬 입력 논문 풀 정규화 시작")
     print(f"[PHASE 1] 시작 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    if not run_script("1_URLs of Paper Abstract Page.py"):
+    if not run_script("1_input_pool_prepare.py"):
         print("ERROR Phase 1 실패. 파이프라인을 중단합니다.")
         return
     print(f"[PHASE 1] 완료 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

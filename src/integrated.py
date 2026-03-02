@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 integrated.py
-Integrated arXiv Paper Collection and Gmail Notification System
+Integrated Local Paper Parsing and Gmail Notification System
 
 Description:
-    - Runs the complete paper collection pipeline (phases 1-5)
-    - Phase 1-4: Paper collection, HTML extraction, organization parsing, data integration
+    - Runs the complete local paper parsing pipeline (phases 1-6)
+    - Phase 1-4: Input pool normalization, HTML extraction, organization parsing, data integration
     - Phase 5: GPT-5-nano abstract summary generation
     - Phase 6: Gmail notification with filtered results
     - Configurable organizations via .env file
@@ -117,13 +117,13 @@ def run_script(script_name: str, input_data: str = None, show_realtime: bool = F
 
 def main():
     """메인 함수 - 통합 파이프라인을 실행합니다."""
-    print("arXiv 논문 수집 및 알림 통합 시스템 시작")
+    print("로컬 논문 파싱 및 알림 통합 시스템 시작")
     print(f"시작 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Step 1: Run Phase 1 - URL Collection
-    print(f"\n[PHASE 1] 논문 URL 수집 시작")
+    # Step 1: Run Phase 1 - Input pool normalization
+    print(f"\n[PHASE 1] 로컬 입력 논문 풀 정규화 시작")
     print(f"[PHASE 1] 시작 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    if not run_script("1_URLs of Paper Abstract Page.py"):
+    if not run_script("1_input_pool_prepare.py"):
         print("ERROR Phase 1 실패. 파이프라인을 중단합니다.")
         return
     print(f"[PHASE 1] 완료 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

@@ -2,68 +2,15 @@
 
 # Results folder - Data files change frequently
 results/
-backup/
-txt/
-
-# Docs folder
-Docs/
-
-# Example files
-Example_files/
 
 # Environment and credentials
 .env
-credentials.json
-token.json
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
 
 # Claude Code files
 .claude/
 
-# Virtual environment
-venv/
-env/
-ENV/
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Log files
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-temp_*
-test_*
-
 # Pickle files (if large)
 *.p
-*.pickle
-
-# CSV backup files with timestamps
-*_processing.csv
 *_failed_*.csv
-
-# Test files
-test_*.py
-(test)*.py
+src/credentials.json
+src/token.json
