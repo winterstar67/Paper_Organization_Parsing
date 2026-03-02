@@ -47,21 +47,43 @@ Create `.env` from `env_example.txt` and set values:
 
 ## Input Data
 
-Phase 1 expects a paper pool file. Supported formats:
+This repository uses **CSV only** as input paper pool format.
 
-- `.csv`
-- `.tsv`
-- `.xlsx`
-- `.json`
+Required input file:
 
-Default path:
+- `input/paper_pool.csv` (or a custom CSV path via `PAPER_POOL_PATH`)
 
-- `input/paper_pool.csv`
+Important requirement:
 
-Override with:
+- For each paper row, the designated local path for HTML or PDF must point to a file that actually exists.
+- Relative paths are resolved from project root.
+- If neither valid local HTML nor valid local PDF exists for a row, that row cannot be processed.
 
-- `.env`: `PAPER_POOL_PATH=...`
-- or CLI input option in `1_input_pool_prepare.py`
+Recommended CSV columns:
+
+- `Title` (required)
+- `Authors`
+- `Abstract`
+- `Submitted`
+- `html_path` (local HTML file path)
+- `pdf_path` (local PDF file path)
+
+Alias columns can be normalized by Phase 1, but keeping the standard names above is recommended.
+
+### CSV Example
+
+```csv
+Title,Authors,Abstract,Submitted,html_path,pdf_path
+"Sample Paper A","Alice; Bob","...",2026-03-01,input/sources/Yes_organ_1.html,input/sources/Yes_organ_3.pdf
+"Sample Paper B","Charlie","...",2026-03-01,input/sources/No_organ_1.html,input/sources/No_organ_2.pdf
+```
+
+### Path Rules
+
+- `html_path` and `pdf_path` can be absolute or relative.
+- Relative example: `input/sources/Yes_organ_1.html`
+- Absolute example: `/mnt/c/.../input/sources/Yes_organ_1.html`
+- Remote URLs are not used as source files in this local pipeline mode.
 
 ## Gmail API Setup
 
@@ -75,6 +97,13 @@ Override with:
 ```bash
 cd src
 python integrated.py
+```
+
+Optional (Phase 1 only):
+
+```bash
+cd src
+python 1_input_pool_prepare.py --input ../input/paper_pool.csv
 ```
 
 ## Notes
