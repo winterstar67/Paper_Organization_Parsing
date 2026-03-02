@@ -64,10 +64,6 @@ CSV columns:
 - Required:
 - `Title`
 - at least one of `html_path` or `pdf_path` (local file path)
-- Optional:
-- `Authors`
-- `Abstract`
-- `Submitted`
 
 Alias columns can be normalized by Phase 1, but keeping the standard names above is recommended.
 
