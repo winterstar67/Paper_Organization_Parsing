@@ -59,14 +59,11 @@ Important requirement:
 - Relative paths are resolved from project root.
 - If neither valid local HTML nor valid local PDF exists for a row, that row cannot be processed.
 
-Recommended CSV columns:
+CSV columns:
 
-- `Title` (required)
-- `Authors`
-- `Abstract`
-- `Submitted`
-- `html_path` (local HTML file path)
-- `pdf_path` (local PDF file path)
+- Required:
+- `Title`
+- at least one of `html_path` or `pdf_path` (local file path)
 
 Alias columns can be normalized by Phase 1, but keeping the standard names above is recommended.
 
